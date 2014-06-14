@@ -1,6 +1,5 @@
 var graph = 'data.json'
-
-    var w = 960,
+var w = document.getElementById('holder_container').offsetWidth,
     h = 700,
     r = 10;
     link_color = 'magenta';

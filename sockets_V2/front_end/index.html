@@ -1,57 +1,61 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Fun music visualizer</title>
-        <link href="css/musicbox.css" rel="stylesheet">
 
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/graph.css" rel="stylesheet">
-        <meta charset="utf-8">        
-    </head>
-    <body>
-    <div class="row">
-        <div class="col-xs-12">
-            <svg id="holder"></svg>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                  <h1>Fun Music visualizer</h1>
-              </div>
-              <div class="panel-body">
-                <div class="playerbox">
-                    <div class="thumb pull-left">
-                        <img src="http://www.guypetersreviews.com/images/cashtop.jpg"></img>
-                    </div>
-                    <div class="info media-body">
-                        <h3>Song title</h3>
-                        <h4>Song artist</h4>
-                    </div>
-                    <div class="timeline">
-                        <div id="timelineProgress" class="timeline-progress"></div>
+<head>
+    <title>Fun music visualizer</title>
+    <link href="css/musicbox.css" rel="stylesheet">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/graph.css" rel="stylesheet">
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <div class="site-wrapper">
+
+        <div class="site-wrapper-inner">
+
+            <div class="cover-container">
+                <h1 class="cover-heading">I've got a lot of boilerplate. It's not the best solution but it works</h1>
+                <div class="inner cover" id="holder_container">
+                    <svg id="holder" class="graph"></svg>
+                    <div id="player">
+                        <div class="playerbox">
+                            <div class="thumb pull-left">
+                                <img src="http://www.guypetersreviews.com/images/cashtop.jpg"></img>
+                            </div>
+                            <div class="info media-body">
+                                <h3>Song title</h3>
+                                <h4>Song artist</h4>
+                            </div>
+                            <button class="btn btn-large btn-warning" data-bind="click: playToggle">
+                                <span data-bind='css: playing() ? "glyphicon glyphicon-pause" : "glyphicon glyphicon-play"'></span>
+                            </button>
+                            <div class="timeline progress progress-striped active">
+                                <div class="progress-bar" id="timelineProgress" data-bind="style.width: progress"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="panel" id="player">
-                    <button class="btn btn-large" data-bind="click: playToggle">
-                        {{ playing() ? "Pause" : "Play"}}
-                    </button>
-                    {{ position }}
 
-                    {{ duration }}
-                    <input data-bind="value: track"/>
+                <div class="mastfoot">
+                    <div class="inner">
+                        <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                    </div>
                 </div>
-              </div>
+
             </div>
+
         </div>
+
     </div>
+
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
     <script src="js/tracking.js"></script>
     <script src="js/tracker/color/color.js"></script>
-    <script src="js/tracker/human/human.js"></script>
     <script src="http://connect.soundcloud.com/sdk.js"></script>
     <script src="bower_components/knockoutjs/dist/knockout.js"></script>
     <script src="bower_components/knockout.punches/knockout.punches.js"></script>
@@ -61,19 +65,8 @@
     <script src="js/graph.js"></script>
     <script src="js/player.js"></script>
 
-    <script>
-        var fakeProgress = 0,
-        timelineProgressInterval = setInterval(function(){
-            fakeProgress++;
-            document.getElementById("timelineProgress").style.right = "" + (100 - fakeProgress) + "%";
-            if (fakeProgress == 100) fakeProgress = 0;
 
-        }, 100);
 
-        $(window).on('unload', function(){
-            clearInterval(timelineProgressInterval);
-        })
-    </script>
+</body>
 
-    </body>
 </html>
