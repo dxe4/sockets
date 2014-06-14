@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MusicRemote</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="txt_bind_your_device">Your device is not bound to a music player.</string>
+    <string name="bind_your_device">Bind your device</string>
+
+</resources>
