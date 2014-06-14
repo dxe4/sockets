@@ -1,0 +1,49 @@
+.musicbox {
+
+
+}
+
+.timeline {
+	margin: 8px;
+	position: relative;
+	height: 8px;
+	background-color: White;
+}
+
+.timeline .timeline-progress {
+
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+
+	background-color: black;
+
+	/** To remove **/
+
+	right: 30%;
+
+	/** End of to remove **/
+}
+
+.playerbox {
+
+	width: 500px;
+	padding: 5px;
+
+	margin: 0 auto;
+
+	background-color: #f0f0f0;
+}
+
+.playerbox .info {
+	padding: 10px;
+}
+
+.playerbox .thumb img { width: 100px; height: 100px; }
+
+#holder {
+	width: 100%;
+	min-height: 500px;
+
+}

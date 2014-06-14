@@ -1,0 +1,15 @@
+{
+  "name": "knockout.punches",
+  "homepage": "https://github.com/mbest/knockout.punches",
+  "version": "0.3.1",
+  "_release": "0.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.3.1",
+    "commit": "84cc2f6e03ee32d3b0c2f772cb119d81dae9e6f5"
+  },
+  "_source": "git://github.com/mbest/knockout.punches.git",
+  "_target": "~0.3.1",
+  "_originalSource": "knockout.punches",
+  "_direct": true
+}

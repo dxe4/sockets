@@ -1,0 +1,15 @@
+{
+  "name": "knockout-bootstrap",
+  "homepage": "https://github.com/billpull/knockout-bootstrap",
+  "version": "0.2.1",
+  "_release": "0.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.1",
+    "commit": "d5db42afd590d86a39a69439078ce068c5170aab"
+  },
+  "_source": "git://github.com/billpull/knockout-bootstrap.git",
+  "_target": "~0.2.1",
+  "_originalSource": "knockout-bootstrap",
+  "_direct": true
+}
