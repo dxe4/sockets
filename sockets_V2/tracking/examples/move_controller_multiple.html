@@ -34,6 +34,8 @@
         type: 'color',
         color: 'magenta',
         onFound: function(track) {
+            console.log(track);
+
             var size = 60 - track.z;
             ctx.strokeStyle = "rgb(255,0,255)";
             ctx.lineWidth = 3;

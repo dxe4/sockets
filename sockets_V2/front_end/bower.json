@@ -1,0 +1,19 @@
+{
+  "name": "front_end",
+  "version": "0.0.0",
+  "homepage": "https://github.com/papaloizouc/sockets",
+  "authors": [
+    "swist <me@swistofon.pl>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "snap.svg": "~0.3.0"
+  }
+}
