@@ -36,6 +36,7 @@
         android:padding="20dp"
         android:gravity="center_horizontal"
         android:id="@+id/remotePanel"
+        android:visibility="gone"
         >
         <LinearLayout
             android:orientation="horizontal"

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -18,12 +19,17 @@ public class Main extends Activity implements View.OnClickListener {
 
     Button btnBindDevice;
 
+    LinearLayout bindDeviceMessage;
+    LinearLayout remotePanel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
         btnBindDevice = (Button) findViewById(R.id.btnBindDevice);
+        bindDeviceMessage = (LinearLayout) findViewById(R.id.bindPhoneMessage);
+        remotePanel = (LinearLayout) findViewById(R.id.remotePanel);
 
         btnBindDevice.setOnClickListener(this);
     }
