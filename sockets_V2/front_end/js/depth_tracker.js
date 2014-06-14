@@ -3,7 +3,6 @@
         tracker = null,
         manager = null;
 
-
     /** MusicManager Part **/
     function MusicManager() {
 
@@ -32,6 +31,8 @@
         this.currentDepth = null;
     }
 
+
+
     DepthTracker.prototype = {
         DIFF_YIELD_THRESHOLD: 5,
 
@@ -57,6 +58,7 @@
             }
 
             this.currentDepth = parseInt(track.z);
+
         }
     }
 
