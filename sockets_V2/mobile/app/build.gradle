@@ -18,12 +18,6 @@ android {
     }
 }
 
-dependencies {
-    compile 'com.android.support:appcompat-v7:19.+'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-}
-
-
 repositories {
     mavenCentral()
 
@@ -33,6 +27,10 @@ repositories {
 }
 
 dependencies {
+
+    compile 'com.android.support:appcompat-v7:19.+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
     // Supports Android 4.0.3 and later (API level 15)
     compile 'com.embarkmobile:zxing-android-minimal:2.0.0@aar'
 
