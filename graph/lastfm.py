@@ -6,6 +6,7 @@ from py2neo import neo4j
 from py2neo import cypher
 import json
 import py2neo
+import time
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
@@ -153,6 +154,7 @@ def make_cache(artist, current_cache, clear=False):
 def _iter(iterable, cache):
     next_iteration = set()
     for i in iterable:
+        time.sleep(0.2)
         cache = make_cache(i, cache, False)
         for k, v in cache.items():
             print(k)
