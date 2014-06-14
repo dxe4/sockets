@@ -8,6 +8,9 @@
         "js": {
             "public/build/js/dist.min.js": [
                 "public/system/lib/jquery/dist/jquery.min.js",
+                "public/system/lib/tracking.js/src/tracking.js",
+                "public/system/lib/tracking.js/src/tracker/color/color.js",
+                "public/system/lib/tracking.js/src/tracker/human/human.js",
                 "public/system/lib/angular/angular.js",
                 "public/system/lib/angular-mocks/angular-mocks.js",
                 "public/system/lib/angular-cookies/angular-cookies.js",

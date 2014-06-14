@@ -6,5 +6,24 @@ angular.module('mean.tracking-game').controller('TrackingGameController', ['$sco
         $scope.package = {
             name: 'tracking-game'
         };
+
+        $scope.track = {};
+
+        $scope.startTracking = function(){
+        	alert('foo');
+        	var tracking = window.tracking;
+	        var videoCamera = new tracking.VideoCamera().render();
+
+	        videoCamera.track({
+			    type: 'color',
+			    onFound: function(track) {
+			    	console.log(track);
+			      	$scope.track = track;
+			    },
+			    onNotFound: function() {}
+			});
+        };
+
+
     }
 ]);

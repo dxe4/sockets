@@ -25,7 +25,7 @@ TrackingGame.register(function(app, auth, database) {
     });
 
     TrackingGame.aggregateAsset('js','tracking.js', {global:true});
-    TrackingGame.aggregateAsset('js','tracking/color.js', {global:true});
+    TrackingGame.aggregateAsset('js','tracker/color.js', {global:true});
 
     /**
     //Uncomment to use. Requires meanio@0.3.7 or above
