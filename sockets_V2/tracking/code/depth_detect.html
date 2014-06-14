@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+
+    <title>tracking.js - Depth</title>
+
+    <meta charset="utf-8">
+
+    <script src="../dist/tracking.min.js"></script>
+    <script src="../dist/tracker/color/color.min.js"></script>
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    canvas {
+        -moz-transform: scale(-1, 1);
+        -o-transform: scale(-1, 1);
+        -webkit-transform: scale(-1, 1);
+        filter: FlipH;
+        transform: scale(-1, 1);
+    }
+
+    canvas#monitor {
+        width: 400px;
+        height: 300px;
+    }
+    </style>
+
+</head>
+<body>
+
+    <script>
+        var videoCamera = new tracking.VideoCamera().render(),
+            context = videoCamera.canvas.context
+            ;
+
+        videoCamera.track({
+            type: 'color',
+            color: 'magenta',
+            onFound: function(track) {
+                var minDepth = -100, maxDepth = 100, currentLevel = 0;
+
+                currentLevel = (track.z - minDepth) / (minDepth - maxDepth);
+                console.log("Current level is " + currentLevel);
+            }
+        });
+
+    </script>
+
+
+</body>
+</html>

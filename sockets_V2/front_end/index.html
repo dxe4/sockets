@@ -1,28 +1,48 @@
 <!doctype html>
 <html>
-<head>
+    <head>
+        <title>Fun music visualizer</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/musicbox.css" rel="stylesheet">
+        <meta charset="utf-8">
 
-    <title>tracking.js - multiple controllers</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <meta charset="utf-8">
+    </head>
+    <body>
+    <h1>Fun Music visualizer</h1>
+
+    <div class="playerbox">
+
+        <div class="thumb pull-left">
+            <img src="http://www.guypetersreviews.com/images/cashtop.jpg"></img>
+        </div>
+        <div class="info media-body">
+            <h3>Song title</h3>
+            <h4>Song artist</h4>
+
+        </div>
+        <div class="timeline">
+            <div id="timelineProgress" class="timeline-progress"></div>
+        </div>
+    </div>
+
+
+
     <script src="js/jquery.min.js"></script>
     <script src="js/snap.svg.js"></script>
     <script src="js/tracking.js"></script>
     <script src="js/tracker/color/color.js"></script>
     <script src="js/tracker/human/human.js"></script>
-</head>
-<body>
-    <div class="row">
-        <div class="col-xs-9">
-            <svg id='main_canvas' width='100%' height='500'></svg>
-        </div>
-        <div class="col-xs-3">
-            
-        </div>
+    <script src="js/depth_tracker.js"></script>
 
-    </div>
-</body>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/graph.js"></script>
-<script src="js/depth_tracker.js"></script>
+    <script>
+        var fakeProgress = 0,
+        timelineProgressInterval = setInterval(function(){
+            fakeProgress++;
+            document.getElementById("timelineProgress").style.right = "" + (100 - fakeProgress) + "%";
+            if (fakeProgress == 100) fakeProgress = 0;
+
+        }, 100);
+    </script>
+
+    </body>
 </html>

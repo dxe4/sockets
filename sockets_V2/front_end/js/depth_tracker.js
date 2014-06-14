@@ -1,66 +1,83 @@
-var videoCamera = new tracking.VideoCamera().hide().render().renderVideoCanvas(),
+    var videoCamera = new tracking.VideoCamera().hide().render().renderVideoCanvas(),
         ctx = videoCamera.canvas.context;
         tracker = null,
-        level = 2;
+        manager = null;
 
+
+    /** MusicManager Part **/
+    function MusicManager() {
+
+    }
+
+    MusicManager.prototype = {
+
+        nextSong: function() {
+
+        },
+
+        previousSong: function() {
+
+        },
+
+        playPause: function() {
+
+        }
+
+    };
+
+
+    /** Gesture tracker **/
     function DepthTracker(track){
-        this.direction = null;
-        this.base_depth = track.z;
-        this.previous_depth = track.z;
-        this.current_depth = track.z;
-        this.last_direction = null;
+        this.currentDirection = null; // 1 to forward, 0 backward
+        this.currentDepth = null;
     }
 
     DepthTracker.prototype = {
-        track: function(track){
-            var diff = this.previous_depth - track.z,
-                base_depth_diff = this.base_depth - track.z;
+        DIFF_YIELD_THRESHOLD: 5,
 
-            if(Math.abs(base_depth_diff) < 5){
-                console.log('got back to base level');
-                level = 2;
+        update: function(track){
+            if (this.currentDepth == null) {
+                this.currentDepth = parseInt(track.z);
                 return;
             }
-            if(Math.abs(diff) < 10) return;
 
-            this.previous_depth = track.z;
-            this.last_direction = this.direction;
+            var direction = Number(track.z < this.currentDepth)
+                diff = Math.abs(track.z - this.currentDepth)
+            ;
 
-            if(diff < 0) {
-                this.direction = "back"
+            if (diff < this.DIFF_YIELD_THRESHOLD) {
+                return;
             }
-            else {
-                this.direction = "forward"
+
+            // Direction changed
+            if (direction != this.currentDirection) {
+                this.directionCounter = 0;
+            } else {
+                this.directionCounter += 1;
             }
-            if(this.direction !== this.last_direction){
-                console.log('old level', level);
-                if(this.direction == 'forward')
-                    level = (level > 3) ? 3 : level+1;
-                else 
-                    level = (level < 1) ? 1 : level-1;
-            }      
-            console.log(level);
+
+            this.currentDepth = parseInt(track.z);
         }
     }
 
-
     videoCamera.track({
         type: 'color',
-        color: 'magenta',
+        color: 'blue',
         onFound: function(track) {
+
             if (!tracker){
                 tracker = new DepthTracker(track);
             }
-            tracker.track(track);
-            
 
-            /*
-            for (var i = 0, len = pixels.length; i < len; i += 2) {
-                ctx.fillStyle = "rgb(255,0,255)";
-                ctx.fillRect(pixels[i], pixels[i+1], 2, 2);
+            tracker.update(track);
+
+            if (tracker.directionCounter > 5) {
+                if (tracker.currentDirection == 1) {
+                    console.log("Going forwards");
+                } else {
+                    console.log("Going backwards");
+                }
             }
 
-            ctx.fillStyle = "rgb(0,0,0)";
-            ctx.fillRect(track.x, track.y, 5, 5);*/
         }
     });
