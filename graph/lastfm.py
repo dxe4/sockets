@@ -4,6 +4,7 @@ import os
 import pickle
 from py2neo import neo4j
 from py2neo import cypher
+import json
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
@@ -35,7 +36,7 @@ class Artist:
         self.name = name
         self.visited = visited
 
-    def _args(self):
+    def to_dict(self):
         return {
             "name": self.name,
             "mbid": self.mbid,
@@ -47,10 +48,10 @@ class Artist:
     def get_or_create(self):
         return artists.get_or_create('mbid',
                                      self.mbid,
-                                     self._args())
+                                     self.to_dict())
 
     def __repr__(self):
-        return " ".join((self.name, self.mbid, self.url, self.img))
+        return " ".join((self.name, self.mbid, self.url, self.image))
 
 
 def get_image(img_list):
@@ -108,11 +109,11 @@ def fetch(artist):
     _artist = get_artist_info(artist)
     related = get_artist_related(artist)
     origin = parse_artist(_artist, match=False)
-    origin = origin.get_or_create()
     related = [parse_artist(i) for i in related]
 
-    cache[artist] = (origin, related)
-    return origin, related
+    res = (origin.to_dict(), [(i[0], i[1].to_dict()) for i in related])
+    cache[artist] = (origin.to_dict(), [(i[0], i[1].to_dict()) for i in related])
+    return res
 
 
 def load_cache():
@@ -126,15 +127,21 @@ def save_cache():
     with open("cache.pickle", "wb") as f:
         pickle.dump(cache, f)
 
+def to_json(data):
+    with open('data.json', 'w') as outfile:
+        json.dump(data, outfile)
 
-if __name__ == '__main__':
+def make_cache():
     cache = load_cache()
     origin, related = fetch("j.j. cale")
 
     for i in related:
         score, artist = i
-        artist = artist.get_or_create()
-        artist_props = artist.get_properties()
+        print("process {} ".format(artist["name"]))
         origin2, result2 = fetch(artist["name"])
 
     save_cache()
+
+if __name__ == '__main__':
+    # make_cache()
+    pass
