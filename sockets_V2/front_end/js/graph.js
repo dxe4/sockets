@@ -1,8 +1,10 @@
-var graph = 'graph.json'
+var graph = 'data.json'
 
     var w = 960,
     h = 700,
     r = 10;
+    link_color = 'magenta';
+var zoom = d3.behavior.zoom().on("zoom", redraw);
 
 var vis = d3.select("#holder")
     .append("svg:svg")
@@ -10,7 +12,7 @@ var vis = d3.select("#holder")
     .attr("height", h)
     .attr("pointer-events", "all")
     .append('svg:g')
-    .call(d3.behavior.zoom().on("zoom", redraw))
+    .call(zoom)
     .append('svg:g');
 
 vis.append('svg:rect')
@@ -19,13 +21,12 @@ vis.append('svg:rect')
     .attr('fill', 'rgba(1,1,1,0)')
 
 function redraw() {
-    console.log("here", d3.event.translate, d3.event.scale);
     vis.attr("transform","translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")"); } 
     
     var force = d3.layout.force()
-        .gravity(.05)
-        .charge(-200)
-        .linkDistance( 60 )
+        //.gravity(0.25)
+        .charge(-400)
+        .linkDistance( 120 )
         .size([w, h]);
     
     var svg = d3.select(".text").append("svg")
@@ -36,14 +37,18 @@ d3.json(graph, function(json) {
         var link = vis.selectAll("line")
             .data(json.links)
             .enter().append("line")
-            .attr("stroke-opacity", function(d) { if(d.label == 'is a') { return '0.8';} else{ return '0.2'; }; })
-            .attr("stroke-width","6")
-            .style("stroke", function(d) { if(d.color !== null) { return d.color;}; })
-            .on("mouseover", function(){d3.select(this).style("stroke", "#999999").attr("stroke-opacity", "1.0");})
-            .on("mouseout", function(){d3.select(this).style("stroke", function(d) { if(d.color !== null) { return d.color;}; }).attr("stroke-opacity", function(d) { if(d.label == 'is a') { return '0.8';} else { return '0.2'; };}) });
+            .attr("stroke-opacity", function(d) { return d.score/10; })
+            .attr("stroke-width", function(d) { return 6/d.score })
+            .style("stroke", link_color)
+            .on("mouseover", function(){d3.select(this).attr("stroke-opacity", "1.0");})
+            .on("mouseout", function(){
+                d3.select(this).attr("stroke-opacity", 
+                    function(d) { return d.score/10;})
+                .attr("stroke-width", function(d) { return 6/d.score }) 
+            });
 
             link.append("title")
-                .text(function(d) { return d.label } );         
+                .text(function(d) { return d.score } );         
 
         var node = vis.selectAll("g.node")
             .data(json.nodes)
@@ -70,11 +75,10 @@ d3.json(graph, function(json) {
                 
             node.append("svg:text")
                 .attr("text-anchor", "middle") 
-                .attr("fill","white")
+                .attr("fill","#fff")
                 .style("pointer-events", "none")
-                .attr("font-size", function(d) { if (d.color == '#b94431') { return 10+(d.size*2) + 'px'; } else { return "9px"; } } )
-                .attr("font-weight", function(d) { if (d.color == '#b94431') { return "bold"; } else { return "100"; } } )
-                .text( function(d) { if (d.color == '#b94431') { return d.id + ' (' + d.size + ')';} else { return d.id;} } ) ;
+                .attr("font-size", '16px' )
+                .text( function(d) { return d.name; } ) ;
                 
             node.append("title")
                 .text(function(d) { return d.URI } );
