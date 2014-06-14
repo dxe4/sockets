@@ -1,0 +1,2 @@
+var snapInstance = Snap('#holder');
+
