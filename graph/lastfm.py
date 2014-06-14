@@ -5,6 +5,7 @@ import pickle
 from py2neo import neo4j
 from py2neo import cypher
 import json
+import py2neo
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
@@ -130,8 +131,10 @@ def to_json(data):
     with open('data.json', 'w') as outfile:
         json.dump(data, outfile)
 
-def make_cache():
+def make_cache(clear=False):
     cache = load_cache()
+    if clear:
+        cache = {}
     origin, related = fetch("j.j. cale", cache)
 
     for i in related:
@@ -142,5 +145,19 @@ def make_cache():
     save_cache(cache)
 
 if __name__ == '__main__':
-    # make_cache()
-    pass
+    # make_cache(True)
+    cache = load_cache()
+
+    for k,v in cache.items():
+        print(k)
+        artist, related_artists =  v
+
+
+        artist = artists.get_or_create("mbid", artist["mbid"], artist)
+        batch = neo4j.WriteBatch(graph_db)
+        for i in related_artists:
+            score, r_artist = i
+            related = artists.get_or_create("mbid", r_artist["mbid"], r_artist)
+            r = py2neo.rel(artist, ("RELATED", {"score": score}), related)
+            batch.get_or_create(r)
+        batch.submit()
