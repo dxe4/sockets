@@ -1,10 +1,12 @@
 import requests
 from pprint import pprint
 import os
+import pickle
 
 key = os.environ["LASTFM_KEY"]
 url = "http://ws.audioscrobbler.com/2.0"
 img_order = ['large', 'medium', 'extralarge', 'mega', 'small']
+cache = {}
 
 
 class Artist:
@@ -16,6 +18,7 @@ class Artist:
 
     def __repr__(self):
         return " ".join((self.name, self.mbid, self.url, self.img))
+
 
 def get_image(img_list):
     '''
@@ -52,6 +55,7 @@ def get_artist_related(artist):
     res = res.json()
     return res["similarartists"]["artist"]
 
+
 def parse_artist(row, match=True):
     args = row["url"], row["mbid"], row["name"], get_image(row["image"])
     url, mbid, name, image = args
@@ -61,13 +65,27 @@ def parse_artist(row, match=True):
     else:
         return artist
 
+
 def fetch(artist):
+    if artist in cache:
+        print("cached")
+        return cache[artist]
+
     _artist = get_artist_info(artist)
     related = get_artist_related(artist)
     origin = parse_artist(_artist, match=False)
     related = [parse_artist(i) for i in related]
 
+    cache[artist] = (origin, related)
     return origin, related
 
-result = fetch("j.j. cale")
-pprint(result)
+
+if __name__ == '__main__':
+    # database !?
+    with open("cache.pickle", "rb") as f:
+        cache = pickle.load(f)
+
+    result = fetch("j.j. cale")
+
+    with open("cache.pickle", "wb") as f:
+        pickle.dump(cache, f)
