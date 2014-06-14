@@ -89,3 +89,5 @@ if __name__ == '__main__':
 
     with open("cache.pickle", "wb") as f:
         pickle.dump(cache, f)
+
+    pprint(cache)
