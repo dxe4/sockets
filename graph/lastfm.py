@@ -13,7 +13,6 @@ artists = graph_db.get_or_create_index(neo4j.Node, "Artists")
 key = os.environ["LASTFM_KEY"]
 url = "http://ws.audioscrobbler.com/2.0"
 img_order = ['large', 'medium', 'extralarge', 'mega', 'small']
-cache = {}
 
 # people.create('id', '10', {"name": "Alice Smith 2"})
 # artist = artists.get("id", "10")[0]
@@ -101,7 +100,7 @@ def parse_artist(row, match=True):
         return artist
 
 
-def fetch(artist):
+def fetch(artist, cache):
     if artist in cache:
         print("cached {}".format(artist))
         return cache[artist]
@@ -123,7 +122,7 @@ def load_cache():
     return cache
 
 
-def save_cache():
+def save_cache(cache):
     with open("cache.pickle", "wb") as f:
         pickle.dump(cache, f)
 
@@ -133,14 +132,14 @@ def to_json(data):
 
 def make_cache():
     cache = load_cache()
-    origin, related = fetch("j.j. cale")
+    origin, related = fetch("j.j. cale", cache)
 
     for i in related:
         score, artist = i
         print("process {} ".format(artist["name"]))
-        origin2, result2 = fetch(artist["name"])
+        origin2, result2 = fetch(artist["name"], cache)
 
-    save_cache()
+    save_cache(cache)
 
 if __name__ == '__main__':
     # make_cache()
