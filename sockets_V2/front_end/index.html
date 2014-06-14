@@ -5,33 +5,28 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/musicbox.css" rel="stylesheet">
         <meta charset="utf-8">
-
     </head>
     <body>
     <h1>Fun Music visualizer</h1>
 
     <div class="playerbox">
-
         <div class="thumb pull-left">
             <img src="http://www.guypetersreviews.com/images/cashtop.jpg"></img>
         </div>
         <div class="info media-body">
             <h3>Song title</h3>
             <h4>Song artist</h4>
-
         </div>
         <div class="timeline">
             <div id="timelineProgress" class="timeline-progress"></div>
         </div>
     </div>
 
-
-
     <script src="js/jquery.min.js"></script>
     <script src="js/snap.svg.js"></script>
-    <script src="js/tracking.js"></script>
-    <script src="js/tracker/color/color.js"></script>
-    <script src="js/tracker/human/human.js"></script>
+    <script src="./lib/tracking.js/dist/tracking.js"></script>
+    <script src="./lib/tracking.js/dist/tracker/color/color.js"></script>
+    <script src="./lib/tracking.js/dist/tracker/human/human.js"></script>
     <script src="js/depth_tracker.js"></script>
 
     <script>
@@ -42,6 +37,10 @@
             if (fakeProgress == 100) fakeProgress = 0;
 
         }, 100);
+
+        $(window).on('unload', function(){
+            clearInterval(timelineProgressInterval);
+        })
     </script>
 
     </body>
