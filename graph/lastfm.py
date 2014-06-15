@@ -1,3 +1,4 @@
+import flask
 import requests
 from pprint import pprint
 import os
@@ -266,7 +267,7 @@ def get_related():
     related = [(i[1], i[2].get_properties()) for i in result]
     res = [origin, related]
     timeout_cache[artist] = res
-    return json.dumps(res)
+    return flask.jsonify(data=res)
 
 
 @app.route('/get_related_2', methods=["GET"])
@@ -295,7 +296,7 @@ def get_related_2():
                i[5], i[0].get_properties(), ) for i in result]
     res = [origin, related]
     timeout_cache[artist] = res
-    return json.dumps(res)
+    return flask.jsonify(data=res)
 
 
 #if __name__ == "__main__":
