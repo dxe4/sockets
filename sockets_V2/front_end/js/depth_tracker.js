@@ -45,7 +45,7 @@ var ColorTrackerManager = function(videoCamera) {
     this.depthTracker = new DepthTracker();
 }
 
-var colors = {"yellow": "#FFB500"};
+var colors = { "cyan": "#1bc2ff", "yellow": "#FFB500", "magenta": "#FF00FF"};
 
 ColorTrackerManager.prototype = {
 
