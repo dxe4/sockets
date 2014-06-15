@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+
+
+<script>
+    var player;
+    $(document).ready(function () {
+        var the_url = "https://gdata.youtube.com/feeds/api/videos?category=music&q=john lee hooker&alt=json";
+        $.get(the_url, function (data) {
+
+            for (var x = 0; x < data.feed.entry.length; x++) {
+                if (x == 3) {
+                    var URI = data.feed.entry[x].id.$t;
+                    var parts = URI.split('/');
+                    player = new YT.Player('player', {
+                        height: '390',
+                        width: '640',
+                        videoId: parts.pop(),
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+        var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    var done = false;
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000);
+            done = true;
+        }
+    }
+    function stopVideo() {
+        player.stopVideo();
+    }
+</script>
+<div id="player"></div>
+
+</body>
+</html>
