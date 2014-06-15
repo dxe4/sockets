@@ -1,5 +1,4 @@
 /*var graph = 'data.json'
-var w = document.getElementById('holder_container').offsetWidth,
     h = 700,
     r = 10;
     link_color = 'magenta';
@@ -95,13 +94,16 @@ d3.json(graph, function(json) {
   }
 });
 */
+
+var w = document.getElementById('holder_container').offsetWidth;
+var store = [];
 var link_color = 'magenta';
 
 
 function myGraph(el) {
     // Add and remove elements on the graph object
-    this.addNode = function (id) {
-        nodes.push({"id":id});
+    this.addNode = function (obj) {
+        nodes.push(obj);
         update();
     }
 
@@ -119,12 +121,12 @@ function myGraph(el) {
         }
     }
 
-    this.addLink = function (sourceId, targetId) {
+    this.addLink = function (sourceId, targetId, score) {
         var sourceNode = findNode(sourceId);
         var targetNode = findNode(targetId);
 
         if((sourceNode !== undefined) && (targetNode !== undefined)) {
-            links.push({"source": sourceNode, "target": targetNode});
+            links.push({"source": sourceNode, "target": targetNode, 'score': score});
             update();
         }
     }
@@ -167,16 +169,18 @@ function myGraph(el) {
 
     var force = d3.layout.force()
         .gravity(0.01)
-        .charge(-400)
+        .charge(-700)
         .size([w, h]);
+
+    var nodes = force.nodes(),
+        links = force.links();
 
     var svg = d3.select(".text")
         .append("svg")
         .attr("width", w)
         .attr("height", h);
 
-    var nodes = force.nodes(),
-        links = force.links();
+
 
     var update = function () {
 
@@ -185,10 +189,9 @@ function myGraph(el) {
 
         link.enter()
             .insert("line")
-            .attr("stroke-opacity", function(d) { return d.score/10; })
-            .attr("stroke-width", function(d) { return 6/d.score })
+            .attr("stroke-opacity", function(d) { return d.score; })
+            .attr("stroke-width", function(d) { return d.score*5; })
             .attr("class", "link")
-            .style("stroke", link_color)
             .on("mouseover", function(){
                 d3.select(this)
                 .attr("stroke-opacity", "1.0")
@@ -197,8 +200,8 @@ function myGraph(el) {
 
             .on("mouseout", function(){
                 d3.select(this)
-                .attr("stroke-opacity", function(d) { return d.score/10;})
-                .attr("stroke-width", function(d) { return 6/d.score }) 
+                .attr("stroke-opacity", function(d) { return d.score;})
+                .attr("stroke-width", function(d) { return d.score*5; }) 
             });
 
         link.exit().remove();
@@ -209,19 +212,19 @@ function myGraph(el) {
         var nodeEnter = node.enter().append("g")
             .attr("class", "node")
             .append("svg:circle")
-            .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 50; })
+            .attr("r", 20)
             .style("fill", 'magenta')
             .style("stroke", 'black')
             .style("stroke-width", "4")
             .call(force.drag);
 
-/*        nodeEnter.append("image")
+        nodeEnter.append("image")
             .attr("class", "circle")
-            .attr("xlink:href", "https://d3nwyuy0nl342s.cloudfront.net/images/icons/public.png")
+            .attr("xlink:href", function(d){ return d.image })
             .attr("x", "-8px")
             .attr("y", "-8px")
             .attr("width", "16px")
-            .attr("height", "16px");*/
+            .attr("height", "16px");
 
         nodeEnter.append("text")
             .attr("class", "nodetext")
@@ -264,6 +267,8 @@ function myGraph(el) {
         vis.transition().duration(750).attr("transform","translate(" + x +',' + y + ")" + " scale(" + scale + ")");
     }
 
+    this.nodes = nodes;
+
     // Make it all go
     update();
 }
@@ -271,16 +276,30 @@ function myGraph(el) {
 graph = new myGraph("#holder");
 
 // You can do this from the console as much as you like...
-graph.addNode("Cause");
-graph.addNode("Effect");
-graph.addLink("Cause", "Effect");
-graph.addNode("A");
-graph.addNode("B");
-graph.addLink("A", "B");
+
+function filterJSONandAddToGraph(JSONResponse){
+    console.log(typeof(JSONResponse));
+    JSONResponse = $.parseJSON(JSONResponse);
+    console.log(JSONResponse);
+    var mbid = JSONResponse[0].id;
+    graph.addNode(JSONResponse[0])
+
+    store.push(JSONResponse[0]);   
+    for(var i = 1; i < JSONResponse[1].length; i++){
+        
+            console.log(JSONResponse[1][i]);
+            store.push(JSONResponse[1][i][1]);
+            JSONResponse[1][i][1].id = JSONResponse[1][i][1].name;
+            graph.addNode(JSONResponse[1][i][1]);
+            console.log(JSONResponse[1][i]);
+            graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);
+    }
+
+}
+
+// You can do this from the console as much as you like...
 
 $.post('http://54.76.152.118:80/get_related', {
         artist: 'Bob Marley'
-    },
-    function(data){
-        console.log(data)
-});
+    }, filterJSONandAddToGraph
+);
