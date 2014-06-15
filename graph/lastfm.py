@@ -21,9 +21,7 @@ key = os.environ["LASTFM_KEY"]
 url = "http://ws.audioscrobbler.com/2.0"
 img_order = ['large', 'medium', 'extralarge', 'mega', 'small']
 
-
-
-
+timeout_cache = {}  # because py2neo has a bug and reconnects all the time...
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -247,6 +245,10 @@ app = Flask(__name__)
 @crossdomain(origin="*")
 def get_related():
     artist = request.form['artist']
+    try:
+        return timeout_cache[artist]
+    except KeyError:
+        pass
     cypher = """
         START artist=node:node_auto_index(name="{}")
         MATCH (artist)<-[r:RELATED]-(artist2)
@@ -261,7 +263,7 @@ def get_related():
     origin = result[0][0].get_properties()
     related = [(i[1], i[2].get_properties()) for i in result]
     res = [origin, related]
-
+    timeout_cache[artist] = res
     return json.dumps(res)
 
 if __name__ == "__main__":
