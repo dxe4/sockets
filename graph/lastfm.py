@@ -206,9 +206,10 @@ def get_related():
     result = query.execute()
 
     result = list(result)
-    origin = result[0][0]
+    origin = result[0][0].get_properties()
     related = [(i[1], i[2].get_properties()) for i in result]
     res = [origin, related]
+
     return json.dumps(res)
 
 if __name__ == "__main__":
