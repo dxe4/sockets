@@ -244,11 +244,13 @@ app = Flask(__name__)
 @app.route('/get_related', methods=["GET"])
 @crossdomain(origin="*")
 def get_related():
-    artist = request.form['artist']
+    artist = request.args.get('artist')
     try:
-        return json.dumps(timeout_cache[artist])
+        result =  timeout_cache[artist]
+        print("cached")
+        return json.dumps(result)
     except KeyError:
-        pass
+        print("no cache")
     cypher = """
         START artist=node:node_auto_index(name="{}")
         MATCH (artist)<-[r:RELATED]-(artist2)
@@ -266,9 +268,38 @@ def get_related():
     timeout_cache[artist] = res
     return json.dumps(res)
 
-if __name__ == "__main__":
-    app.run()
 
+@app.route('/get_related_2', methods=["GET"])
+@crossdomain(origin="*")
+def get_related():
+    artist = request.args.get('artist')
+    try:
+        result =  timeout_cache[artist]
+        print("cached")
+        return json.dumps(result)
+    except KeyError:
+        print("no cache")
+    cypher = """
+        START artist=node:node_auto_index(name={})
+        MATCH (artist)<-[r:RELATED]-(artist2)-[r1:RELATED]->(artist3)-[r2:RELATED]->(artist)
+        RETURN artist, r.score, artist2, r1.score, artist3, r2.score
+        limit 100
+    """.format(artist)
+    query = neo4j.CypherQuery(graph_db, cypher)
+    result = query.execute()
+
+    result = list(result)
+    origin = result[0][0].get_properties()
+    related = [(i[1], i[2].get_properties(),
+               i[3], i[4].get_properties(),
+               i[5], i[0].get_properties(), ) for i in result]
+    res = [origin, related]
+    timeout_cache[artist] = res
+    return json.dumps(res)
+
+
+#if __name__ == "__main__":
+#    app.run(host='0.0.0.0', port=80)
 # if __name__ == '__main__':
 #     # make_cache(True)
 #     run()
