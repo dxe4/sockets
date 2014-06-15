@@ -26,13 +26,9 @@ var queryTerm = ko.observable();
 var search = {
     queryTerm : queryTerm,
     submit: function(){
-        for(var i; i < store.length; i++ ){
-            graph.nodes = [];
-            graph.links = [];
-        }
-        
+
         $.get('http://54.76.152.118:1234/get_related_2', {
-                artist: queryTerm() ? queryTerm() : 'Bonobo'
+                artist: queryTerm()
             }, filterJSONandAddToGraph
         );
     }
