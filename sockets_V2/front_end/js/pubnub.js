@@ -26,7 +26,9 @@ var queryTerm = ko.observable();
 var search = {
     queryTerm : queryTerm,
     submit: function(){
-
+        for(var i = 0; i < graph.nodes.length; i++){
+            graph.removeNode(graph.nodes[i]['id']);
+        }
         $.get('http://54.76.152.118:1234/get_related_2', {
                 artist: queryTerm()
             }, filterJSONandAddToGraph
@@ -60,7 +62,6 @@ function onPlayerReady(event) {
 
 }
 function onPlayerStateChange(event){
-
 }
 
 function onYouTubeIframeAPIReady() {
