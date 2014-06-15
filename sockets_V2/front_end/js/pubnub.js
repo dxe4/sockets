@@ -8,24 +8,6 @@ var pubnub = PUBNUB.init({
      subscribe_key : 'sub-c-44b62dd0-f3f1-11e3-a672-02ee2ddab7fe'
  })
 
-pubnub.subscribe({
-    channel : page_guid,
-    message : function(m){ 
-        switch(m.action){
-            case 'playpause':
-                window.playerView.playpause()
-                break;
-            case 'back':
-                window.playerView.back();
-                break;
-            case 'skip':
-                window.playerView.back();
-                break;
-        }
-    },
-    connect : publish
-})
-
 function publish() {
  pubnub.publish({
      channel : page_guid,
@@ -57,3 +39,75 @@ var search = {
 };
 
 ko.applyBindings(search, $("#searchbox")[0]);
+function onPlayerReady(event) {
+    var playerView = new window.PlayerView(player);
+    ko.applyBindings( playerView, $('#playerView')[0] );
+    pubnub.subscribe({
+        channel : page_guid,
+        message : function(m){ 
+            switch(m.action){
+                case 'playpause':
+                    playerView.playpause()
+                    break;
+                case 'back':
+                    playerView.back();
+                    break;
+                case 'skip':
+                    playerView.back();
+                    break;
+            }
+        },
+        connect : publish
+    })
+    updateYouTubeElement('Bonobo');
+
+}
+function onPlayerStateChange(event){
+    console.log(event);
+}
+
+function onYouTubeIframeAPIReady() {
+    console.log('no player');
+    player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: parts.pop(),
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+var player,
+    parts = ['Bonobo'];
+$(document).ready(function(){
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+})
+
+
+function load_player(data){
+    for (var x = 0; x < data.feed.entry.length; x++) {
+        if (x == 3) {
+            var URI = data.feed.entry[x].id.$t;
+            var parts = URI.split('/');
+            console.log('new player');
+            player.loadVideoById(parts.pop());
+        }
+    }
+}
+
+function updateYouTubeElement(artist){
+    console.log('getting the player');
+    var the_url = "https://gdata.youtube.com/feeds/api/videos";
+    $.get(the_url, {
+        'category': 'music',
+        'q': artist,
+        'alt': 'json'
+    }, load_player);
+}
+
+

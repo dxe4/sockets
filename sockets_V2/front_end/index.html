@@ -9,6 +9,7 @@
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href="hide_youtube.css" rel="stylesheet">
     <meta charset="utf-8">
 </head>
 
@@ -39,20 +40,20 @@
                         </form>
                     </div>
                     <svg id="holder" class="graph"></svg>
-                    <div id="player">
+                    <div id="playerView">
+                        <div>
+                            <h2> Now playing: <span id="npmessage">Bonobo</span></h2>
+                        </div>
                         <button class="btn btn-large btn-default" data-bind="click: playpause">
                             <span data-bind='css: playing() ? "glyphicon glyphicon-pause" : "glyphicon glyphicon-play"'></span>
                         </button>
-                        <div class="timeline progress progress-striped active">
-                            <div class="progress-bar" id="timelineProgress" data-bind="style.width: progress"></div>
-                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
-
     </div>
+    <div id="player"></div>
 
 
     <script src="js/jquery.min.js"></script>
@@ -60,12 +61,11 @@
     <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
     <script src="js/tracking.js"></script>
     <script src="js/tracker/color/color.js"></script>
-    <script src="http://connect.soundcloud.com/sdk.js"></script>
     <script src="bower_components/knockoutjs/dist/knockout.js"></script>
     <script src="bower_components/knockout.punches/knockout.punches.js"></script>
     <script src="bower_components/knockout-bootstrap/src/knockout-bootstrap.js"></script>
     <script src="bower_components/d3/d3.js"></script>
-    <!-- <script src="js/depth_tracker.js"></script> -->
+    <script src="js/depth_tracker.js"></script>
     <script src="js/graph.js"></script>
     <script src="js/player.js"></script>
     <script src="js/pubnub.js"></script>
