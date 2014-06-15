@@ -34,7 +34,7 @@ function publish() {
 }
 
 function QRCodeView(){
-    this.url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+page_guid
+    this.url = "https://api.qrserver.com/v1/create-qr-code/?size=75x75&data="+page_guid
 }
 
 ko.applyBindings(new QRCodeView(), $('#qrcode')[0]);
