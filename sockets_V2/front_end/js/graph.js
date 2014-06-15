@@ -189,8 +189,8 @@ function myGraph(el) {
                 return d.id;
             })
             .on('click', function(d){
-                updateYouTubeElement(d.name)
-                $('#npmessage').text(d.name)
+                updateYouTubeElement(d.name);
+                $('#npmessage').text(d.name);
                 player.playVideo();
             });
 
