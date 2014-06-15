@@ -7,8 +7,9 @@ from py2neo import cypher
 import json
 import py2neo
 import time
+from flask import Flask, jsonify, request, Response
 
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+graph_db = neo4j.GraphDatabaseService("http://127.0.0.1:7474/db/data/")
 
 artists = graph_db.get_or_create_index(neo4j.Node, "Artists")
 
@@ -188,7 +189,28 @@ def run():
     next_iteration = _iter(next_iteration, cache)
 
 
-if __name__ == '__main__':
-    # make_cache(True)
-    run()
+
+app = Flask(__name__)
+
+@app.route('/get_related', methods=["POST"])
+def get_related():
+    artist = request.form['artist']
+    cypher = """
+        START artist=node:node_auto_index(name="{}")
+        MATCH (artist)<-[r:RELATED]-(artist2)
+        RETURN artist, r.score, artist2
+        ORDER BY r.score DESC
+        limit 10
+    """.format(artist)
+    query = neo4j.CypherQuery(graph_db, cypher)
+    result = query.execute()
+    res = [(i[0].get_properties(), i[1], i[0].get_properties()) for i in result]
+    return json.dumps(res)
+
+if __name__ == "__main__":
+    app.run()
+
+# if __name__ == '__main__':
+#     # make_cache(True)
+#     run()
 

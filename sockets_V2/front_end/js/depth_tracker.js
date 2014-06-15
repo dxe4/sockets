@@ -44,6 +44,7 @@ DepthTracker.prototype = {
             diff = Math.abs(track.z - this.currentDepth)
         ;
 
+
         if (diff < this.DIFF_YIELD_THRESHOLD) {
             return;
         }
@@ -100,4 +101,5 @@ var colortracker = new ColorTrackerManager(videoCamera);
 $.each(colors, function(colorName, hexa){
     colortracker.addTracker(colorName, hexa);
 });
+
 

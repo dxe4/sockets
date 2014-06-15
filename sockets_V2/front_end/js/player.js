@@ -69,6 +69,3 @@ window.playerView = (function (ko, $, SC) {
 	return vm;
 	
 })(ko, $, SC); 
-
-
-
