@@ -33,10 +33,15 @@ window.PlayerView = (function (ko, $) {
 			}
 		},
 		skip: function(){
-			console.log('skip');
+			var new_artist = Math.floor(Math.random(0, 1)* graph.nodes.length),
+				new_name  = graph.nodes[new_artist].name;
+			updateYouTubeElement(new_name)
+
 		},
 		back: function(){
-			console.log('back');
+			var new_artist = Math.floor(Math.random(0, 1)* graph.nodes.length),
+				new_name  = graph.nodes[new_artist].name;
+			updateYouTubeElement(new_name)
 		}
 	}
 

@@ -31,7 +31,7 @@ var search = {
             graph.links = [];
         }
         
-        $.post('http://54.76.152.118:1234/get_related_2', {
+        $.get('http://54.76.152.118:1234/get_related_2', {
                 artist: queryTerm() ? queryTerm() : 'Bonobo'
             }, filterJSONandAddToGraph
         );
@@ -40,7 +40,7 @@ var search = {
 
 ko.applyBindings(search, $("#searchbox")[0]);
 function onPlayerReady(event) {
-    var playerView = new window.PlayerView(player);
+    var playerView = window.pv = new window.PlayerView(player);
     ko.applyBindings( playerView, $('#playerView')[0] );
     pubnub.subscribe({
         channel : page_guid,
@@ -59,6 +59,7 @@ function onPlayerReady(event) {
         },
         connect : publish
     })
+
     updateYouTubeElement('Bonobo');
 
 }
@@ -96,18 +97,21 @@ function load_player(data){
             var parts = URI.split('/');
             console.log('new player');
             player.loadVideoById(parts.pop());
+            player.stopVideo();
         }
     }
 }
 
 function updateYouTubeElement(artist){
     console.log('getting the player');
+
     var the_url = "https://gdata.youtube.com/feeds/api/videos";
     $.get(the_url, {
         'category': 'music',
         'q': artist,
         'alt': 'json'
     }, load_player);
+    $('#npmessage').text(artist);
 }
 
 
