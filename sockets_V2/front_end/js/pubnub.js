@@ -38,3 +38,22 @@ function QRCodeView(){
 }
 
 ko.applyBindings(new QRCodeView(), $('#qrcode')[0]);
+
+var queryTerm = ko.observable();
+
+/*var search = {
+    queryTerm : queryTerm,
+    submit: function(){
+        for(var i; i < store.length; i++ ){
+            graph.nodes = [];
+            graph.links = [];
+        }
+        
+        $.post('http://54.76.152.118:80/get_related', {
+                artist: queryTerm()
+            }, filterJSONandAddToGraph
+        );
+    }
+};
+
+ko.applyBindings(search, $("#searchbox")[0]);*/
