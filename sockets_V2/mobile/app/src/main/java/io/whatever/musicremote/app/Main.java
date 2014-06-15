@@ -102,11 +102,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         bindPhoneText = (TextView) findViewById(R.id.bindPhoneText);
         appTitleText = (TextView) findViewById(R.id.appTitle);
 
-        Typeface lobsterBoldFont = Typeface.createFromAsset(this.getAssets(), "fonts/lobster.bold.ttf");
-        Typeface lobsterFont = Typeface.createFromAsset(this.getAssets(), "fonts/lobster.ttf");
-
-        bindPhoneText.setTypeface(lobsterFont, Typeface.NORMAL);
-        bindPhoneText.setTypeface(lobsterBoldFont, Typeface.NORMAL);
+        // Typeface lobsterBoldFont = Typeface.createFromAsset(this.getAssets(), "fonts/lobster.bold.ttf");
+        // Typeface lobsterFont = Typeface.createFromAsset(this.getAssets(), "fonts/lobster.ttf");
+        // bindPhoneText.setTypeface(lobsterFont, Typeface.NORMAL);
+        // bindPhoneText.setTypeface(lobsterBoldFont, Typeface.NORMAL);
     }
 
 
@@ -198,11 +197,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     }
 
     public void onShake(int shakeCount) {
-        Log.d("Main", String.format("Has shaked %d times", shakeCount));
+        if (shakeCount > 1 && remote != null) {
+            remote.sendSkip();
+        }
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(final SensorEvent event) {
+
         (new Thread() {
             @Override
             public void run() {
@@ -234,7 +236,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     shakeTimestamp = now;
                     shakeCount++;
 
-                    this.onShake(shakeCount);
+                    Main.this.onShake(shakeCount);
                 }
             }
 

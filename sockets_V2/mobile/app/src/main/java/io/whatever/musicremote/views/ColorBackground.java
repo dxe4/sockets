@@ -16,7 +16,7 @@ public class ColorBackground extends FrameLayout {
     private int r;
     private int g;
     private int b;
-    private String currentColor;
+    private String currentColor = "#8888ff";
     final int STEP = 3;
 
     public ColorBackground(Context context) {
