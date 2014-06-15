@@ -241,7 +241,7 @@ def run():
 
 app = Flask(__name__)
 
-@app.route('/get_related', methods=["POST"])
+@app.route('/get_related', methods=["GET"])
 @crossdomain(origin="*")
 def get_related():
     artist = request.form['artist']
