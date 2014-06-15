@@ -210,8 +210,8 @@ function myGraph(el) {
             .attr("class", "node")
             .append("svg:circle")
             .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 50; })
-            .style("fill", function(d) { if(d.style == 'filled') { return d.color;}; })
-            .style("stroke", function(d) { if(d.style !== 'filled') { return d.color;}; })
+            .style("fill", 'magenta')
+            .style("stroke", 'black')
             .style("stroke-width", "4")
             .call(force.drag);
 
@@ -227,7 +227,7 @@ function myGraph(el) {
             .attr("class", "nodetext")
             .attr("dx", 12)
             .attr("dy", ".35em")
-            .text(function(d) {return d.id});
+            .text(function(d) {return d.name});
 
         node.exit().remove();
 
@@ -254,7 +254,13 @@ function myGraph(el) {
             var x = ((zoom.translate()[0] - (w / 2)) * .75) + w / 2;
             var y = ((zoom.translate()[1] - (h / 2)) * .75) + h / 2;
         }
+        this.scale = scale;
         zoom.scale(scale).translate([x,y])
+        vis.transition().duration(750).attr("transform","translate(" + x +',' + y + ")" + " scale(" + scale + ")");
+    }
+    this.translate = function(x, y){
+        var scale = zoom.scale();
+        zoom.translate([x,y]);
         vis.transition().duration(750).attr("transform","translate(" + x +',' + y + ")" + " scale(" + scale + ")");
     }
 
