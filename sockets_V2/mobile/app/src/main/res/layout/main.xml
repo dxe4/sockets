@@ -1,71 +1,116 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="io.whatever.musicremote.app.Main">
 
+    <io.whatever.musicremote.views.ColorBackground
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/colorBackground"
+        />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:id="@+id/bindPhoneMessage"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bind_your_device"
-            android:id="@+id/textView"
-            android:padding="40dp"
-            />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/btnBindDevice" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:gravity="center_horizontal"
-        android:id="@+id/remotePanel"
-        android:visibility="gone"
-        >
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="247dp"
-            android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:id="@+id/remoteControls"
+            android:id="@+id/bindPhoneMessage"
             >
-
-            <ImageView
-                android:layout_width="30dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back"
-                android:id="@+id/btnBack" />
+                android:text="@string/bind_your_device"
+                android:id="@+id/textView"
+                android:padding="40dp"
+                />
 
-            <ImageView
-                android:layout_width="30dp"
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_play"
-                android:id="@+id/btnPlay" />
+                android:text="New Button"
+                android:id="@+id/btnBindDevice" />
+        </LinearLayout>
 
-            <ImageView
-                android:layout_width="30dp"
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_horizontal"
+            android:id="@+id/remotePanel"
+            android:visibility="gone"
+            >
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_skip"
-                android:id="@+id/btnNext" />
+                android:layout_marginBottom="247dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:id="@+id/remoteControls"
+                >
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_back"
+                    android:id="@+id/btnBack" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_play"
+                    android:id="@+id/btnPlay" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_skip"
+                    android:id="@+id/btnNext" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="247dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:id="@+id/colorControls"
+                >
+
+                <io.whatever.musicremote.views.ColorBackground
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:id="@+id/btnColorBlue"
+                    android:background="#1bc2ff"
+                    />
+
+                <io.whatever.musicremote.views.ColorBackground
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:id="@+id/btnColorMagenta"
+                    android:background="#FF00FF"
+                    />
+
+                <io.whatever.musicremote.views.ColorBackground
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:id="@+id/btnColorYellow"
+                    android:background="#FFB500"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
