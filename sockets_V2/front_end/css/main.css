@@ -23,3 +23,8 @@ body {
 h1 {
 	text-align: center;
 }
+
+.link {
+    stroke: '#ddd';
+    stroke-width: 2px;
+}
