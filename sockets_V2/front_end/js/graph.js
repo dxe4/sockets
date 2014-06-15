@@ -184,39 +184,6 @@ function myGraph(el) {
 
     var update = function () {
 
-        var link = vis.selectAll("line.link")
-            .data(links, function (d) {
-                return d.source.id + "-" + d.target.id;
-            });
-
-        link.enter()
-           .insert("line")
-           .style("stroke-opacity", function (d) {
-               return d.score;
-           })
-           .style("stroke-width", function (d) {
-               return d.score * 10;
-           })
-           .attr("class", "link")
-           .on("mouseover", function () {
-               d3.select(this)
-                   .style("stroke-opacity", "1.0")
-                   .style("stroke-width", 5)
-               ;
-           })
-
-           .on("mouseout", function () {
-               d3.select(this)
-                   .attr("stroke-opacity", function (d) {
-                       return d.score;
-                   })
-                   .attr("stroke-width", function (d) {
-                       return d.score * 5;
-                   })
-           });
-
-        link.exit().remove();
-
         var node = vis.selectAll("g.node")
             .data(nodes, function (d) {
                 return d.id;
@@ -227,8 +194,14 @@ function myGraph(el) {
             .append("g")
             .attr("class", "node")
             .attr("width", 50)
-            .attr("height", 50)
-            .call(force.drag);
+            .attr("height", 50);
+
+/*        nodeEnter.append("circle")
+          .attr("class", "node")
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; })
+          .attr("r", 50)
+          .style("fill", '#666');*/
 
         nodeEnter
             .append("text")
@@ -249,19 +222,19 @@ function myGraph(el) {
             .attr("xlink:href", function (d) {
                 return d.image
             })
-            .attr("width", 50)
-            .attr("height", 50)
+            .attr("width", 100)
+            .attr("height", 100)
             .on("mouseover", function () {
                d3.select(this)
-                   .attr("width", 80)
-                   .attr("height", 80)
+                   .attr("width", 120)
+                   .attr("height", 120)
                ;
             })
 
            .on("mouseout", function () {
                d3.select(this)
-                .attr("width", 50)
-                .attr("height", 50)
+                .attr("width", 100)
+                .attr("height", 100)
             });
 
 
@@ -288,14 +261,50 @@ function myGraph(el) {
             });
         });
 
+        var link = vis.selectAll("line.link")
+            .data(links, function (d) {
+                return d.source.id + "-" + d.target.id;
+            });
+
+        link.enter()
+           .insert("line")
+           .style("stroke-opacity", function (d) {
+               return d.score;
+           })
+           .style("stroke-width", function (d) {
+               return d.score * 10;
+           })
+           .attr("fill", 'white')
+           .attr("class", "link")
+           .on("mouseover", function () {
+               d3.select(this)
+                   .style("stroke-opacity", "1.0")
+                   .style("stroke-width", 5)
+               ;
+           })
+
+           .on("mouseout", function () {
+               d3.select(this)
+                   .attr("stroke-opacity", function (d) {
+                       return d.score;
+                   })
+                   .attr("stroke-width", function (d) {
+                       return d.score * 5;
+                   })
+           });
+
+        link.exit().remove();
+
         // Restart the force layout.
         force
-                .gravity(.01)
-                .charge(-80000)
-                .friction(0)
-                .linkDistance( function(d) { return 70/d.score } )
-                .size([w, h])
-                .start();
+            .gravity(0.05)
+            .charge(function(d, i) { return i ? 0 : -100; })
+            .friction(0)
+            .nodes(nodes)
+            .links(links)
+            .linkDistance( function(d) { return 100/d.score } )
+            .size([w, h])
+            .start();
     };
 
     this.zoom = function (direction) {
