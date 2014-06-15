@@ -1,10 +1,16 @@
 // initialize client with app credentials
 window.playerView = (function (ko, $, SC) {
+	ko.punches.enableAll();
+
 	function PlayerView(sound){
 		this.sound = ko.observable(sound);
 		this.playing = ko.observable(false);
 		this.position = ko.observable(0);
-		this.duration = ko.observable(0);
+		this.duration = ko.observable(1);
+
+		this.progress = ko.computed(function(){
+			return (this.position()/this.duration())*100+"%";
+		}, this)
 
 		this.track = ko.observable("/tracks/293");
 	}
@@ -12,7 +18,7 @@ window.playerView = (function (ko, $, SC) {
 
 
 	PlayerView.prototype = {
-		playToggle: function(){
+		playpause: function(){
 			var sound = this.sound(),
 				playing = this.playing(),
 				self = this;
@@ -37,13 +43,16 @@ window.playerView = (function (ko, $, SC) {
 		},
 		loadTrack: function(){
 
+		},
+		skip: function(){
+			console.log('skip');
+		},
+		back: function(){
+			console.log('back');
 		}
 	}
 
 	var vm = new PlayerView();
-	ko.punches.interpolationMarkup.enable();
-
-
 	SC.initialize({
 	  client_id: 'b61d4560984dc7c38d3fc0fcb123cffc',
 	  redirect_uri: 'http://localhost:9001/callback.html'

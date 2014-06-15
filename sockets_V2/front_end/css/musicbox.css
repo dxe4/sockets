@@ -3,29 +3,6 @@
 
 }
 
-.timeline {
-	margin: 8px;
-	position: relative;
-	height: 8px;
-	background-color: White;
-}
-
-.timeline .timeline-progress {
-
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	bottom: 0px;
-
-	background-color: black;
-
-	/** To remove **/
-
-	right: 30%;
-
-	/** End of to remove **/
-}
-
 .playerbox {
 
 	width: 500px;

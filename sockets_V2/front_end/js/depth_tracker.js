@@ -64,7 +64,7 @@
 
     videoCamera.track({
         type: 'color',
-        color: 'blue',
+        color: 'cyan',
         onFound: function(track) {
 
             if (!tracker){
@@ -72,8 +72,7 @@
             }
 
             tracker.update(track);
-
-            if (tracker.directionCounter > 5) {
+            if (tracker.directionCounter > 3) {
                 if (tracker.currentDirection == 1) {
                     console.log("Going forwards");
                 } else {

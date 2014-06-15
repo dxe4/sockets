@@ -5,6 +5,8 @@ import pickle
 from py2neo import neo4j
 from py2neo import cypher
 import json
+import py2neo
+import time
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
@@ -116,31 +118,77 @@ def fetch(artist, cache):
 
 
 def load_cache():
-    cache = {}
-    with open("cache.pickle", "rb") as f:
-        cache = pickle.load(f)
-    return cache
+    try:
+        cache = {}
+        with open("cache.pickle", "rb") as f:
+            cache = pickle.load(f)
+        return cache
+    except:  # Do not bother for now
+        return {}
 
 
 def save_cache(cache):
     with open("cache.pickle", "wb") as f:
         pickle.dump(cache, f)
 
+
 def to_json(data):
     with open('data.json', 'w') as outfile:
         json.dump(data, outfile)
 
-def make_cache():
-    cache = load_cache()
-    origin, related = fetch("j.j. cale", cache)
+
+def make_cache(artist, current_cache, clear=False):
+    # cache = load_cache()
+    # if clear:
+    #     cache = {}
+    origin, related = fetch(artist, current_cache)
 
     for i in related:
         score, artist = i
         print("process {} ".format(artist["name"]))
-        origin2, result2 = fetch(artist["name"], cache)
+        origin2, result2 = fetch(artist["name"], current_cache)
 
-    save_cache(cache)
+    return current_cache
+
+
+def _iter(iterable, cache):
+    next_iteration = set()
+    for i in iterable:
+        time.sleep(0.2)
+        cache = make_cache(i, cache, False)
+        for k, v in cache.items():
+            print(k)
+            artist, related_artists = v
+
+            artist = artists.get_or_create("mbid", artist["mbid"], artist)
+            batch = neo4j.WriteBatch(graph_db)
+            for i in related_artists:
+                score, r_artist = i
+                next_iteration.add(r_artist['name'])
+                related = artists.get_or_create("mbid", r_artist["mbid"], r_artist)
+                r = py2neo.rel(artist, ("RELATED", {"score": score}), related)
+                batch.get_or_create(r)
+            batch.submit()
+    return next_iteration.difference(iterable)
+
+def run():
+    to_search = {
+        "tom waits", "j.j. cale", "muddy waters", "iron maiden",
+        "black sabbath", "bob marley", "john lee hooker",
+        "deep purple", "Four Tet", "Bonobo",
+        "Jefferson Airplane", "Teebs", "Flying Lotus", "Bibio",
+        "peter green", "fleetwood mac", "Marvin Gaye", "Otis Redding",
+        "Barry White", "Percy Sledge", "James Brown", "Curtis Mayfield",
+        "Ray Charles"
+    }
+    cache = {}
+    next_iteration = _iter(to_search, cache)
+    next_iteration = _iter(next_iteration, cache)
+    next_iteration = _iter(next_iteration, cache)
+    next_iteration = _iter(next_iteration, cache)
+
 
 if __name__ == '__main__':
-    # make_cache()
-    pass
+    # make_cache(True)
+    run()
+
