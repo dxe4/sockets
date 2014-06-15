@@ -24,3 +24,21 @@
 	min-height: 500px;
 
 }
+
+h1.cover-heading {
+	font-size: 4em;
+	font-family: "Lobster", "cursive", "Times", "Sans";
+}
+
+canvas {
+	z-index: -999;
+	position: absolute;
+	top: 0; bottom: 0;
+	bottom: 0; right: 0;
+}
+
+canvas video {
+	position: absolute;
+	top: 0; bottom: 0;
+	bottom: 0; right: 0;
+}

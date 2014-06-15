@@ -49,7 +49,7 @@
                 dy = g-255,
                 dz = b-0;
 
-            if ((r - g) >= threshold && (b - g) >= threshold) {
+            if ((r - b) >= threshold && (g - b) >= threshold) {
                 return true;
             }
 
