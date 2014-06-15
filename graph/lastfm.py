@@ -267,7 +267,9 @@ def get_related():
     related = [(i[1], i[2].get_properties()) for i in result]
     res = [origin, related]
     timeout_cache[artist] = res
-    return flask.jsonify(data=res)
+    response = Response(json.dumps(res),  mimetype='application/json')
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    return response
 
 
 @app.route('/get_related_2', methods=["GET"])
@@ -296,7 +298,9 @@ def get_related_2():
                i[5], i[0].get_properties(), ) for i in result]
     res = [origin, related]
     timeout_cache[artist] = res
-    return flask.jsonify(data=res)
+    response = Response(json.dumps(res),  mimetype='application/json')
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    return response
 
 
 #if __name__ == "__main__":

@@ -338,7 +338,6 @@ function filterJSONandAddToGraph(JSONResponse) {
 // You can do this from the console as much as you like...
 
 $.get('http://54.76.152.118:80/get_related_2', {
-        artist: 'Bonobo',
-        "callback": "?"
+        artist: 'Bonobo'
     }, filterJSONandAddToGraph
 );
