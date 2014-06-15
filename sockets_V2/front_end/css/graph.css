@@ -6,27 +6,6 @@ node {
 	color:#fff;
 	border: 1px dotted dimgray;
 	}		
-line {
-	stroke: #666;
-	}
-.text {
-	text-align:justify;	
-	width:940px;
-	height:140px;
-	margin: 0 auto;
-	color:#FFF;
-	font-size:14px;
-	line-height:20px;
-	}
-	
-.text a {
-	color:orange;
-	text-decoration:none;
-	}
-.text a:hover {
-	color:red;
-	}
-
 
 /*
  * Globals
