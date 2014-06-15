@@ -344,7 +344,7 @@ graph = new myGraph("#holder");
 // You can do this from the console as much as you like...
 
 function filterJSONandAddToGraph(JSONResponse) {
-//    console.log(typeof(JSONResponse));
+   console.log(typeof(JSONResponse));
     JSONResponse = $.parseJSON(JSONResponse);
    console.log(JSONResponse);
     var mbid = JSONResponse[0].id;
@@ -375,6 +375,6 @@ function filterJSONandAddToGraph(JSONResponse) {
 // You can do this from the console as much as you like...
 
 $.get('http://54.76.152.118:1234/get_related_2', {
-        artist: "'Bonobo'",
+        artist: "Bonobo",
     }, filterJSONandAddToGraph 
 );
