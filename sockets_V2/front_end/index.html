@@ -28,6 +28,16 @@
                     </h1>
                 
                 <div class="inner cover" id="holder_container">
+                    <div id="searchbox">
+                        <form data-bind="submit: submit">
+                            <div class="input-group">
+                              <input type="text" class="form-control" data-bind="value: queryTerm, valueUpdate: 'afterkeydown'" placeholder="Search"/>
+                              <span class="input-group-btn">
+                                  <button class="btn btn-default" type="submit">Go!</button>
+                              </span>
+                            </div>
+                        </form>
+                    </div>
                     <svg id="holder" class="graph"></svg>
                     <div id="player">
                         <button class="btn btn-large btn-default" data-bind="click: playpause">
@@ -38,13 +48,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mastfoot">
-                    <div class="inner">
-                        <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-                    </div>
-                </div>
-
             </div>
 
         </div>

@@ -1,3 +1,4 @@
+import flask
 import requests
 from pprint import pprint
 import os
@@ -9,6 +10,10 @@ import py2neo
 import time
 from flask import Flask, jsonify, request, Response
 
+from datetime import timedelta
+from flask import make_response, request, current_app
+from functools import update_wrapper
+
 graph_db = neo4j.GraphDatabaseService("http://127.0.0.1:7474/db/data/")
 
 artists = graph_db.get_or_create_index(neo4j.Node, "Artists")
@@ -16,6 +21,51 @@ artists = graph_db.get_or_create_index(neo4j.Node, "Artists")
 key = os.environ["LASTFM_KEY"]
 url = "http://ws.audioscrobbler.com/2.0"
 img_order = ['large', 'medium', 'extralarge', 'mega', 'small']
+
+timeout_cache = {}  # because py2neo has a bug and reconnects all the time...
+
+def crossdomain(origin=None, methods=None, headers=None,
+                max_age=21600, attach_to_all=True,
+                automatic_options=True):
+    if methods is not None:
+        methods = ', '.join(sorted(x.upper() for x in methods))
+    if headers is not None and not isinstance(headers, str):
+        headers = ', '.join(x.upper() for x in headers)
+    if not isinstance(origin, str):
+        origin = ', '.join(origin)
+    if isinstance(max_age, timedelta):
+        max_age = max_age.total_seconds()
+
+    def get_methods():
+        if methods is not None:
+            return methods
+
+        options_resp = current_app.make_default_options_response()
+        return options_resp.headers['allow']
+
+    def decorator(f):
+        def wrapped_function(*args, **kwargs):
+            if automatic_options and request.method == 'OPTIONS':
+                resp = current_app.make_default_options_response()
+            else:
+                resp = make_response(f(*args, **kwargs))
+            if not attach_to_all and request.method != 'OPTIONS':
+                return resp
+
+            h = resp.headers
+
+            h['Access-Control-Allow-Origin'] = origin
+            h['Access-Control-Allow-Methods'] = get_methods()
+            h['Access-Control-Max-Age'] = str(max_age)
+            if headers is not None:
+                h['Access-Control-Allow-Headers'] = headers
+            return resp
+
+        f.provide_automatic_options = False
+        return update_wrapper(wrapped_function, f)
+    return decorator
+
+
 
 # people.create('id', '10', {"name": "Alice Smith 2"})
 # artist = artists.get("id", "10")[0]
@@ -192,9 +242,16 @@ def run():
 
 app = Flask(__name__)
 
-@app.route('/get_related', methods=["POST"])
+@app.route('/get_related', methods=["GET"])
+@crossdomain(origin="*")
 def get_related():
-    artist = request.form['artist']
+    artist = request.args.get('artist')
+    try:
+        result =  timeout_cache[artist]
+        print("cached")
+        return json.dumps(result)
+    except KeyError:
+        print("no cache")
     cypher = """
         START artist=node:node_auto_index(name="{}")
         MATCH (artist)<-[r:RELATED]-(artist2)
@@ -209,12 +266,44 @@ def get_related():
     origin = result[0][0].get_properties()
     related = [(i[1], i[2].get_properties()) for i in result]
     res = [origin, related]
+    timeout_cache[artist] = res
+    response = Response(json.dumps(res),  mimetype='application/json')
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    return response
 
-    return json.dumps(res)
 
-if __name__ == "__main__":
-    app.run()
+@app.route('/get_related_2', methods=["GET"])
+@crossdomain(origin="*")
+def get_related_2():
+    artist = request.args.get('artist')
+    try:
+        result =  timeout_cache[artist]
+        print("cached")
+        return json.dumps(result)
+    except KeyError:
+        print("no cache")
+    cypher = """
+        START artist=node:node_auto_index(name={})
+        MATCH (artist)<-[r:RELATED]-(artist2)-[r1:RELATED]->(artist3)-[r2:RELATED]->(artist)
+        RETURN artist, r.score, artist2, r1.score, artist3, r2.score
+        limit 100
+    """.format(artist)
+    query = neo4j.CypherQuery(graph_db, cypher)
+    result = query.execute()
 
+    result = list(result)
+    origin = result[0][0].get_properties()
+    related = [(i[1], i[2].get_properties(),
+               i[3], i[4].get_properties()) for i in result]
+    res = [origin, related]
+    timeout_cache[artist] = res
+    response = Response(json.dumps(res),  mimetype='application/json')
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    return response
+
+
+#if __name__ == "__main__":
+#    app.run(host='0.0.0.0', port=80)
 # if __name__ == '__main__':
 #     # make_cache(True)
 #     run()

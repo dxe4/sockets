@@ -10,7 +10,7 @@ function DepthTracker(track){
 }
 
 DepthTracker.prototype = {
-    DIFF_YIELD_THRESHOLD: 3,
+    DIFF_YIELD_THRESHOLD: 4,
 
     update: function(track){
         if (this.currentDepth == null) {
@@ -36,11 +36,13 @@ DepthTracker.prototype = {
 
         this.currentDepth = parseInt(track.z);
         this.currentDirection = direction;
+
     }
 }
 
 var ColorTrackerManager = function(videoCamera) {
     this.videoCamera = videoCamera;
+    this.depthTracker = new DepthTracker();
 }
 
 var colors = { "cyan": "#1bc2ff", "yellow": "#FFB500", "magenta": "#FF00FF"};
@@ -52,8 +54,17 @@ ColorTrackerManager.prototype = {
     onColorFound: function(color, track) {
         var instance = this;
 
-        if (instance.videoCamera) {
+        $("body").css("background-color", instance.COLORS[color]);
 
+        if (this.depthTracker.directionCounter > 1){
+            if (this.currentDirection == 1){
+                graph.zoom('in');
+            }
+        }
+        if (this.depthTracker.directionCounter > 1){
+            if (this.currentDirection == 0){
+                graph.zoom('out');
+            }
         }
 
         $("body").css("background-color", instance.COLORS[color]);
@@ -66,6 +77,7 @@ ColorTrackerManager.prototype = {
             type: 'color',
             color: colorName,
             onFound: function(track) {
+                instance.depthTracker.update(track);
                 instance.onColorFound.call(instance, colorName, track);
             }
         });
