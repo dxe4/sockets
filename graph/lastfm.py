@@ -246,7 +246,7 @@ app = Flask(__name__)
 def get_related():
     artist = request.form['artist']
     try:
-        return timeout_cache[artist]
+        return json.dumps(timeout_cache[artist])
     except KeyError:
         pass
     cypher = """
