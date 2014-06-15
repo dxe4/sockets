@@ -204,8 +204,7 @@ def get_related():
     """.format(artist)
     query = neo4j.CypherQuery(graph_db, cypher)
     result = query.execute()
-    print(list(result))
-    res = [list(i) for i in result]
+    res = [(i[0].get_properties(), i[1], i[0].get_properties()) for i in result]
     return json.dumps(res)
 
 if __name__ == "__main__":
