@@ -1,11 +1,6 @@
 node { 
 	stroke-width: 1.5px;
 	}
-.graph {
-	margin:0 auto;
-	color:#fff;
-	border: 1px dotted dimgray;
-	}		
 
 /*
  * Globals
@@ -32,6 +27,13 @@ a:hover {
 /*
  * Base structure
  */
+
+#holder {
+  width: 100%;
+  min-height: 650px;
+
+}
+
 
 html,
 body {

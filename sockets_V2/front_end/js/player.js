@@ -64,7 +64,7 @@ window.playerView = (function (ko, $, SC) {
 
 	SC.whenStreamingReady(function(){
 		ko.applyBindings(vm, $("#player")[0]);
-	})
+	})	
 
 	return vm;
 	

@@ -156,16 +156,16 @@ function myGraph(el) {
     var zoom = d3.behavior.zoom().on("zoom", redraw);
 
     // set up the D3 visualisation in the specified element
-    var w = 960,
-        h = 960;
+    var w = document.getElementById('holder').offsetWidth,
+        h = document.getElementById('holder').offsetHeight;
 
     var vis = this.vis = d3.select("#holder")
         .append("svg:svg")
         .attr("width", w)
         .attr("height", h)
         .attr("pointer-events", "all")
-        .call(zoom)
-        .append('svg:g');
+        .append('svg:g')
+        .call(zoom);
 
     vis.append('svg:rect')
         .attr('width', w)
@@ -173,19 +173,13 @@ function myGraph(el) {
         .attr('fill', 'rgba(1,1,1,0)');
 
     var force = d3.layout.force()
-        .gravity(2)
+        .gravity(0.0001)
         .charge(-500)
         .linkDistance(300)
         .size([w, h]);
 
     var nodes = force.nodes(),
         links = force.links();
-
-    var svg = d3.select(".text")
-        .append("svg")
-        .attr("width", w)
-        .attr("height", h);
-
 
     var update = function () {
 
@@ -195,30 +189,30 @@ function myGraph(el) {
             });
 
         link.enter()
-            .insert("line");
-//            .attr("stroke-opacity", function (d) {
-//                return d.score;
-//            })
-//            .attr("stroke-width", function (d) {
-//                return d.score * 5;
-//            })
-//            .attr("class", "link")
-//            .on("mouseover", function () {
-//                d3.select(this)
-//                    .attr("stroke-opacity", "1.0")
-//                    .attr("stroke-width", 5)
-//                ;
-//            })
-//
-//            .on("mouseout", function () {
-//                d3.select(this)
-//                    .attr("stroke-opacity", function (d) {
-//                        return d.score;
-//                    })
-//                    .attr("stroke-width", function (d) {
-//                        return d.score * 5;
-//                    })
-//            });
+           .insert("line")
+           .attr("stroke-opacity", function (d) {
+               return d.score;
+           })
+           .attr("stroke-width", function (d) {
+               return d.score * 5;
+           })
+           .attr("class", "link")
+           .on("mouseover", function () {
+               d3.select(this)
+                   .attr("stroke-opacity", "1.0")
+                   .attr("stroke-width", 5)
+               ;
+           })
+
+           .on("mouseout", function () {
+               d3.select(this)
+                   .attr("stroke-opacity", function (d) {
+                       return d.score;
+                   })
+                   .attr("stroke-width", function (d) {
+                       return d.score * 5;
+                   })
+           });
 
         link.exit().remove();
 
@@ -229,27 +223,27 @@ function myGraph(el) {
 
 
         var nodeEnter = node.enter().append("g")
-                //.attr("class", "node")
-                //.append("svg:circle")
-                //.attr("r", 50)
+                .attr("class", "node")
+                /*.append("svg:circle")
+                .attr("r", 50)
                 .attr("x", 50)
-                .attr("y", 50)
+                .attr("y", 50)*/
                 .attr("width", 100)
                 .attr("height", 100)
-//            .style("fill", 'white')
-//            .style("stroke", 'black')
-                .style("stroke-width", "15")
+                .style("stroke", 'black')
+                /*.style("stroke-width", "15")*/
+                .call(force.drag);
 
-            ;//.call(force.drag);
-
-        nodeEnter.append("text")
-
+        nodeEnter
+            .append("text")
             .style('font-size', 35)
-            .attr("x", function (d) {
-                return -20
-            })
+            .attr("class", "nodetext")
+            .attr("dx", 12)
+            .attr("dy", 12)
+            .text(function (d) {
+                return d.name;
+            });
 
-            .text("FFOO");
 
         nodeEnter.append("image")
             .attr("xlink:href", function (d) {
@@ -259,13 +253,6 @@ function myGraph(el) {
             .attr("width", 100)
             .attr("height", 100);
 
-        nodeEnter.append('svg:text').append("text")
-//            .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", 12)
-            .text(function (d) {
-                return d.name;
-            });
 
 
         node.exit().remove();
@@ -307,7 +294,7 @@ function myGraph(el) {
         zoom.scale(scale).translate([x, y]);
         vis.transition().duration(50).attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
     };
-    this.translate = function (x, y) {
+    this.pan = function (x, y) {
         var scale = zoom.scale();
         zoom.translate([x, y]);
         vis.transition().duration(50).attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
