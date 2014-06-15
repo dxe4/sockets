@@ -10,11 +10,12 @@ function DepthTracker(track){
 }
 
 DepthTracker.prototype = {
-    DIFF_YIELD_THRESHOLD: 4,
+    DIFF_YIELD_THRESHOLD: 6,
 
     update: function(track){
         if (this.currentDepth == null) {
             this.currentDepth = parseInt(track.z);
+            if (!this.currentDepth) this.currentDepth = 0;
             return;
         }
 
@@ -35,6 +36,7 @@ DepthTracker.prototype = {
         }
 
         this.currentDepth = parseInt(track.z);
+        if (!this.currentDepth) this.currentDepth = 0;
         this.currentDirection = direction;
     }
 }
@@ -44,7 +46,7 @@ var ColorTrackerManager = function(videoCamera) {
     this.depthTracker = new DepthTracker();
 }
 
-var colors = { "cyan": "#1bc2ff", "yellow": "#FFB500", "magenta": "#FF00FF"};
+var colors = { "yellow": "#FFB500"};
 
 ColorTrackerManager.prototype = {
 
@@ -54,8 +56,6 @@ ColorTrackerManager.prototype = {
         var instance = this;
 
         $("body").css("background-color", instance.COLORS[color]);
-
-        console.log(this.depthTracker);
 
         if (graph){
             if (this.depthTracker.currentDirection == 1){

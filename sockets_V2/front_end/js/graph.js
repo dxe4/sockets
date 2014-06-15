@@ -174,7 +174,7 @@ function myGraph(el) {
         .attr('fill', 'rgba(1,1,1,0)');
 
     var force = d3.layout.force();
-    
+
     var svg = d3.select(".text").append("svg")
         .attr("width", w)
         .attr("height", h);
@@ -280,7 +280,7 @@ function myGraph(el) {
            .style("stroke-width", function (d) {
                return d.score * 5;
            })
-           
+
            .attr("class", "link")
            .on("mouseover", function () {
                d3.select(this)
@@ -314,23 +314,25 @@ function myGraph(el) {
     };
 
     this.zoom = function (direction) {
+        var ratio = 1.15;
         if (direction == "in") {
-            var scale = zoom.scale() * 1.5;
-            var x = ((zoom.translate()[0] - (w / 2)) * 1.5) + w / 2;
-            var y = ((zoom.translate()[1] - (h / 2)) * 1.5) + h / 2;
+            var scale = zoom.scale() * ratio;
+            var x = ((zoom.translate()[0] - (w / 2)) * ratio) + w / 2;
+            var y = ((zoom.translate()[1] - (h / 2)) * ratio) + h / 2;
         } else {
-            var scale = zoom.scale() * .75;
+            var scale = zoom.scale() * 0.9;
             var x = ((zoom.translate()[0] - (w / 2)) * .75) + w / 2;
             var y = ((zoom.translate()[1] - (h / 2)) * .75) + h / 2;
         }
+        if(scale < 0.25 || scale > 3.75) scale = this.scale;
         this.scale = scale;
         zoom.scale(scale).translate([x, y]);
-        vis.transition().duration(50).attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
+        vis.attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
     };
     this.pan = function (x, y) {
         var scale = zoom.scale();
         zoom.translate([x, y]);
-        vis.transition().duration(50).attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
+        vis.attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
     };
 
     this.nodes = nodes;
@@ -350,7 +352,7 @@ function filterJSONandAddToGraph(JSONResponse) {
     var mbid = JSONResponse[0].id;
     graph.addNode(JSONResponse[0]);
 
-    for (var i = 1; i < JSONResponse[1].length; i++) {
+    for (var i = 1; i < 20; i++) {
 
 //        console.log(JSONResponse[1][i]);
         JSONResponse[1][i][1].id = JSONResponse[1][i][1].name;
@@ -358,9 +360,9 @@ function filterJSONandAddToGraph(JSONResponse) {
         graph.addNode(JSONResponse[1][i][1]);
 //        console.log(JSONResponse[1][i]);
         if(i < 10){
-            graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);    
+            graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);
         }
-        
+
         var index_to_check = graph.findNodeIndex(JSONResponse[1][i][3].id);
         if(index_to_check > -1 && index_to_check !== undefined){
             graph.addNode(JSONResponse[1][i][3].id);
@@ -376,5 +378,5 @@ function filterJSONandAddToGraph(JSONResponse) {
 
 $.get('http://54.76.152.118:1234/get_related_2', {
         artist: "Bonobo",
-    }, filterJSONandAddToGraph 
+    }, filterJSONandAddToGraph
 );
