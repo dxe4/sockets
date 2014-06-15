@@ -9,7 +9,7 @@ import py2neo
 import time
 from flask import Flask, jsonify, request, Response
 
-graph_db = neo4j.GraphDatabaseService("http://54.76.152.118:7474/db/data/")
+graph_db = neo4j.GraphDatabaseService("http://127.0.0.1:7474/db/data/")
 
 artists = graph_db.get_or_create_index(neo4j.Node, "Artists")
 
