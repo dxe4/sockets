@@ -31,7 +31,7 @@ var search = {
             graph.links = [];
         }
         
-        $.post('http://54.76.152.118:1234/get_related_2', {
+        $.get('http://54.76.152.118:1234/get_related_2', {
                 artist: queryTerm() ? queryTerm() : 'Bonobo'
             }, filterJSONandAddToGraph
         );
