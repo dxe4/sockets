@@ -1,5 +1,5 @@
 // initialize client with app credentials
-window.playerView = (function (ko, $, SC) {
+window.PlayerView = (function (ko, $) {
 	ko.punches.enableAll();
 
 	function PlayerView(sound){
@@ -11,8 +11,6 @@ window.playerView = (function (ko, $, SC) {
 		this.progress = ko.computed(function(){
 			return (this.position()/this.duration())*100+"%";
 		}, this)
-
-		this.track = ko.observable("/tracks/293");
 	}
 
 
@@ -22,27 +20,17 @@ window.playerView = (function (ko, $, SC) {
 			var sound = this.sound(),
 				playing = this.playing(),
 				self = this;
+			console.log(sound);
 			switch (playing){
 				case false:
-					console.log('tring play');
-					sound.play({
-						whileplaying: function(){
-							self.position(sound.position);
-						},
-						whileloading: function(){
-							self.duration(sound.duration);
-						}
-					});
+					window.player.playVideo();
 					this.playing(true);
 					return;
 				case true:
-					sound.pause();
+					window.player.stopVideo();
 					this.playing(false);
 					return;
 			}
-		},
-		loadTrack: function(){
-
 		},
 		skip: function(){
 			console.log('skip');
@@ -52,20 +40,6 @@ window.playerView = (function (ko, $, SC) {
 		}
 	}
 
-	var vm = new PlayerView();
-	SC.initialize({
-	  client_id: 'b61d4560984dc7c38d3fc0fcb123cffc',
-	  redirect_uri: 'http://localhost:9001/callback.html'
-	});
-
-	SC.stream("/tracks/293", function(sound){
-		vm.sound(sound);
-	});
-
-	SC.whenStreamingReady(function(){
-		ko.applyBindings(vm, $("#player")[0]);
-	})	
-
-	return vm;
+	return PlayerView
 	
-})(ko, $, SC); 
+})(ko, $); 

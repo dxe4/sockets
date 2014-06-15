@@ -187,6 +187,11 @@ function myGraph(el) {
         var node = vis.selectAll("g.node")
             .data(nodes, function (d) {
                 return d.id;
+            })
+            .on('click', function(d){
+                updateYouTubeElement(d.name)
+                $('#npmessage').text(d.name)
+                player.playVideo();
             });
 
 
@@ -268,30 +273,31 @@ function myGraph(el) {
 
         link.enter()
            .insert("line")
+           .style("stroke", 'white')
            .style("stroke-opacity", function (d) {
                return d.score;
            })
            .style("stroke-width", function (d) {
-               return d.score * 10;
+               return d.score * 5;
            })
-           .attr("fill", 'white')
+           
            .attr("class", "link")
            .on("mouseover", function () {
                d3.select(this)
                    .style("stroke-opacity", "1.0")
-                   .style("stroke-width", 5)
+                   .style("stroke-width", 10)
                ;
            })
 
            .on("mouseout", function () {
                d3.select(this)
-                   .attr("stroke-opacity", function (d) {
-                       return d.score;
-                   })
-                   .attr("stroke-width", function (d) {
-                       return d.score * 5;
-                   })
-           });
+                .style("stroke-opacity", function (d) {
+                    return d.score;
+                })
+                .style("stroke-width", function (d) {
+                    return d.score * 5;
+               })
+            });
 
         link.exit().remove();
 
