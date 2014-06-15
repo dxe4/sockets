@@ -271,7 +271,7 @@ def get_related():
 
 @app.route('/get_related_2', methods=["GET"])
 @crossdomain(origin="*")
-def get_related():
+def get_related_2():
     artist = request.args.get('artist')
     try:
         result =  timeout_cache[artist]
