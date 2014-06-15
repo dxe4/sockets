@@ -294,8 +294,7 @@ def get_related_2():
     result = list(result)
     origin = result[0][0].get_properties()
     related = [(i[1], i[2].get_properties(),
-               i[3], i[4].get_properties(),
-               i[5], i[0].get_properties(), ) for i in result]
+               i[3], i[4].get_properties()) for i in result]
     res = [origin, related]
     timeout_cache[artist] = res
     response = Response(json.dumps(res),  mimetype='application/json')
