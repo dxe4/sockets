@@ -96,6 +96,7 @@
  */
 
 var w = document.getElementById('holder_container').offsetWidth;
+var h = document.getElementById('holder_container').offsetHeight;
 var store = [];
 var link_color = 'magenta';
 
@@ -157,7 +158,7 @@ function myGraph(el) {
 
     // set up the D3 visualisation in the specified element
     var w = document.getElementById('holder').offsetWidth,
-        h = document.getElementById('holder').offsetHeight;
+        h = document.getElementById('holder').offsetWidth;
 
     var vis = this.vis = d3.select("#holder")
         .append("svg:svg")
@@ -165,7 +166,7 @@ function myGraph(el) {
         .attr("height", h)
         .attr("pointer-events", "all")
         .append('svg:g')
-        .call(zoom);
+        .call(d3.behavior.zoom().on("zoom", redraw))
 
     vis.append('svg:rect')
         .attr('width', w)
@@ -173,13 +174,18 @@ function myGraph(el) {
         .attr('fill', 'rgba(1,1,1,0)');
 
     var force = d3.layout.force()
-        .gravity(0.0001)
+        .gravity(.05)
         .charge(-500)
-        .linkDistance(300)
+        .linkDistance( 400 )
         .size([w, h]);
+    
+    var svg = d3.select(".text").append("svg")
+        .attr("width", w)
+        .attr("height", h);
 
     var nodes = force.nodes(),
         links = force.links();
+
 
     var update = function () {
 
@@ -317,22 +323,21 @@ function filterJSONandAddToGraph(JSONResponse) {
     var mbid = JSONResponse[0].id;
     graph.addNode(JSONResponse[0]);
 
-    store.push(JSONResponse[0]);
     for (var i = 1; i < JSONResponse[1].length; i++) {
 
 //        console.log(JSONResponse[1][i]);
-        store.push(JSONResponse[1][i][1]);
         JSONResponse[1][i][1].id = JSONResponse[1][i][1].name;
         graph.addNode(JSONResponse[1][i][1]);
 //        console.log(JSONResponse[1][i]);
         graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);
+        graph.addLink(JSONResponse[0].id, JSONResponse[1][i-1][1].id, JSONResponse[1][i][0]);
     }
 
 }
 
 // You can do this from the console as much as you like...
 
-$.post('http://54.76.152.118:80/get_related', {
-        artist: 'Bob Marley'
+$.get('http://54.76.152.118:80/get_related_2', {
+        artist: 'Bonobo'
     }, filterJSONandAddToGraph
 );
