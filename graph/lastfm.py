@@ -275,6 +275,12 @@ def get_related():
 @app.route('/get_related_2', methods=["GET"])
 @crossdomain(origin="*")
 def get_related_2():
+    try:
+        return foo()
+    except Exception as e:
+        print(e)
+
+def foo():
     artist = request.args.get('artist')
     try:
         result =  timeout_cache[artist]
@@ -302,8 +308,8 @@ def get_related_2():
     return response
 
 
-#if __name__ == "__main__":
-#    app.run(host='0.0.0.0', port=80)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=1234)
 # if __name__ == '__main__':
 #     # make_cache(True)
 #     run()
