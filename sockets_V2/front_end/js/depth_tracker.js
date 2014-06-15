@@ -31,12 +31,11 @@ DepthTracker.prototype = {
         if (direction != this.currentDirection) {
             this.directionCounter = 0;
         } else {
-            this.directionCounter += 1;
+            this.directionCounter ++;
         }
 
         this.currentDepth = parseInt(track.z);
         this.currentDirection = direction;
-
     }
 }
 
@@ -56,14 +55,11 @@ ColorTrackerManager.prototype = {
 
         $("body").css("background-color", instance.COLORS[color]);
 
-        if (this.depthTracker.directionCounter > 1){
+        if (graph && this.depthTracker.directionCounter > 1){
             if (this.currentDirection == 1){
-                graph.zoom('in');
-            }
-        }
-        if (this.depthTracker.directionCounter > 1){
-            if (this.currentDirection == 0){
-                graph.zoom('out');
+                //graph.zoom('in');
+            } else {
+                //graph.zoom('out');
             }
         }
 
