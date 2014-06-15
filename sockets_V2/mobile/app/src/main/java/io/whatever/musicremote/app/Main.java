@@ -110,7 +110,7 @@ public class Main extends Activity implements View.OnClickListener {
 
 
     void bindPlayerWithUrl(String requestUrl) {
-        remote = new PubSubRemote("pub-musicplayer-test-42");
+        remote = new PubSubRemote(requestUrl);
         remoteIsBound = true;
 
         bindDeviceMessage.setVisibility(View.GONE);
