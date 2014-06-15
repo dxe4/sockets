@@ -200,11 +200,15 @@ def get_related():
         MATCH (artist)<-[r:RELATED]-(artist2)
         RETURN artist, r.score, artist2
         ORDER BY r.score DESC
-        limit 10
+        limit 20
     """.format(artist)
     query = neo4j.CypherQuery(graph_db, cypher)
     result = query.execute()
-    res = [(i[0].get_properties(), i[1], i[2].get_properties()) for i in result]
+
+    result = list(result)
+    origin = result[0][0]
+    related = [(i[1], i[2].get_properties()) for i in result]
+    res = [origin, related]
     return json.dumps(res)
 
 if __name__ == "__main__":
