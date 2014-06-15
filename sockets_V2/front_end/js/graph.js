@@ -195,30 +195,30 @@ function myGraph(el) {
             });
 
         link.enter()
-            .insert("line")
-            .attr("stroke-opacity", function (d) {
-                return d.score;
-            })
-            .attr("stroke-width", function (d) {
-                return d.score * 5;
-            })
-            .attr("class", "link")
-            .on("mouseover", function () {
-                d3.select(this)
-                    .attr("stroke-opacity", "1.0")
-                    .attr("stroke-width", 5)
-                ;
-            })
-
-            .on("mouseout", function () {
-                d3.select(this)
-                    .attr("stroke-opacity", function (d) {
-                        return d.score;
-                    })
-                    .attr("stroke-width", function (d) {
-                        return d.score * 5;
-                    })
-            });
+            .insert("line");
+//            .attr("stroke-opacity", function (d) {
+//                return d.score;
+//            })
+//            .attr("stroke-width", function (d) {
+//                return d.score * 5;
+//            })
+//            .attr("class", "link")
+//            .on("mouseover", function () {
+//                d3.select(this)
+//                    .attr("stroke-opacity", "1.0")
+//                    .attr("stroke-width", 5)
+//                ;
+//            })
+//
+//            .on("mouseout", function () {
+//                d3.select(this)
+//                    .attr("stroke-opacity", function (d) {
+//                        return d.score;
+//                    })
+//                    .attr("stroke-width", function (d) {
+//                        return d.score * 5;
+//                    })
+//            });
 
         link.exit().remove();
 
@@ -229,18 +229,27 @@ function myGraph(el) {
 
 
         var nodeEnter = node.enter().append("g")
-            //.attr("class", "node")
-            //.append("svg:circle")
-            //.attr("r", 50)
-            .attr("x", 50)
-            .attr("y", 50)
-            .attr("width", 100)
-            .attr("height", 100)
-            .style("fill", 'white')
-            .style("stroke", 'black')
-            .style("stroke-width", "8")
-            .call(force.drag)
+                //.attr("class", "node")
+                //.append("svg:circle")
+                //.attr("r", 50)
+                .attr("x", 50)
+                .attr("y", 50)
+                .attr("width", 100)
+                .attr("height", 100)
+//            .style("fill", 'white')
+//            .style("stroke", 'black')
+                .style("stroke-width", "15")
 
+            ;//.call(force.drag);
+
+        nodeEnter.append("text")
+
+            .style('font-size', 35)
+            .attr("x", function (d) {
+                return -20
+            })
+
+            .text("FFOO");
 
         nodeEnter.append("image")
             .attr("xlink:href", function (d) {
@@ -254,7 +263,6 @@ function myGraph(el) {
 //            .attr("class", "nodetext")
             .attr("dx", 12)
             .attr("dy", 12)
-            .style('font-size', 10)
             .text(function (d) {
                 return d.name;
             });
