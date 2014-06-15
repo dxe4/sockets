@@ -42,7 +42,7 @@ public class ColorBackground extends FrameLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (this.currentColor != null) {
-            //this.setBackgroundColor(Color.parseColor(this.currentColor));
+            this.setBackgroundColor(Color.parseColor(this.currentColor));
         }
     }
 }

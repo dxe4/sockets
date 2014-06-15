@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,10 +21,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.lang.reflect.Type;
 
 import io.whatever.musicremote.music.PubSubRemote;
 import io.whatever.musicremote.views.ColorBackground;
@@ -39,6 +43,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
     LinearLayout bindDeviceMessage;
     LinearLayout remotePanel;
+
+    TextView bindPhoneText;
+    TextView appTitleText;
 
     ColorBackground background;
     ColorBackground btnBlue;
@@ -78,19 +85,28 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         btnBlue.setColor("#1bc2ff");
 
         btnMagenta = (ColorBackground) findViewById(R.id.btnColorMagenta);
-        btnMagenta.setColor("#ff00ff");
+        // btnMagenta.setColor("#ff00ff");
 
         btnYellow = (ColorBackground) findViewById(R.id.btnColorYellow);
-        btnMagenta.setColor("#ffb500");
+        // btnMagenta.setColor("#ffb500");
 
         btnBlue.setOnClickListener(this);
         btnMagenta.setOnClickListener(this);
-        btnYellow.setOnClickListener(this);
+        // btnYellow.setOnClickListener(this);
 
         btnBindDevice.setOnClickListener(this);
 
         sensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorMgr.registerListener(this, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+
+        bindPhoneText = (TextView) findViewById(R.id.bindPhoneText);
+        appTitleText = (TextView) findViewById(R.id.appTitle);
+
+        Typeface lobsterBoldFont = Typeface.createFromAsset(this.getAssets(), "fonts/lobster.bold.ttf");
+        Typeface lobsterFont = Typeface.createFromAsset(this.getAssets(), "fonts/lobster.ttf");
+
+        bindPhoneText.setTypeface(lobsterFont, Typeface.NORMAL);
+        bindPhoneText.setTypeface(lobsterBoldFont, Typeface.NORMAL);
     }
 
 
@@ -129,9 +145,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     }
 
     void sendRemoteAction(int action) {
-        if (remote == null) {
-            return;
-        }
+        if (remote == null) return;
 
         switch (action) {
             case R.id.btnBack:
@@ -144,13 +158,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 remote.sendSkip();
                 break;
             case R.id.btnColorBlue:
-                background.setBackgroundColor(Color.parseColor("1bc2ff"));
+                background.setBackgroundColor(Color.parseColor("1bc2ffff"));
                 break;
             case R.id.btnColorMagenta:
-                background.setBackgroundColor(Color.parseColor("ff00ff"));
+                background.setBackgroundColor(Color.parseColor("ff00ffff"));
                 break;
             case R.id.btnColorYellow:
-                background.setBackgroundColor(Color.parseColor("ffb500"));
+                background.setBackgroundColor(Color.parseColor("ffb500ff"));
                 break;
         }
     }
@@ -189,35 +203,48 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float x = event.values[0];
-        float y = event.values[1];
-        float z = event.values[2];
+        (new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
 
-        float gX = x / SensorManager.GRAVITY_EARTH;
-        float gY = y / SensorManager.GRAVITY_EARTH;
-        float gZ = z / SensorManager.GRAVITY_EARTH;
+                float gX = x / SensorManager.GRAVITY_EARTH;
+                float gY = y / SensorManager.GRAVITY_EARTH;
+                float gZ = z / SensorManager.GRAVITY_EARTH;
 
-        // gForce will be close to 1 when there is no movement.
-        float gForce = FloatMath.sqrt(gX * gX + gY * gY + gZ * gZ);
+                // gForce will be close to 1 when there is no movement.
+                float gForce = FloatMath.sqrt(gX * gX + gY * gY + gZ * gZ);
 
-        if (gForce > SHAKE_THRESHOLD_GRAVITY) {
-            final long now = System.currentTimeMillis();
+                if (gForce > SHAKE_THRESHOLD_GRAVITY) {
+                    final long now = System.currentTimeMillis();
 
-            // ignore shake events too close to each other (500ms)
-            if (shakeTimestamp + SHAKE_SLOP_TIME_MS > now) {
-                return;
+                    // ignore shake events too close to each other (500ms)
+                    if (shakeTimestamp + SHAKE_SLOP_TIME_MS > now) {
+                        return;
+                    }
+
+                    // reset the shake count after 3 seconds of no shakes
+                    if (shakeTimestamp + SHAKE_COUNT_RESET_TIME_MS < now) {
+                        shakeCount = 0;
+                    }
+
+                    shakeTimestamp = now;
+                    shakeCount++;
+
+                    this.onShake(shakeCount);
+                }
             }
 
-            // reset the shake count after 3 seconds of no shakes
-            if (shakeTimestamp + SHAKE_COUNT_RESET_TIME_MS < now) {
-                shakeCount = 0;
-            }
+        }).start();
+    }
 
-            shakeTimestamp = now;
-            shakeCount++;
-
-            this.onShake(shakeCount);
-        }
+    @Override
+    protected void onStop() {
+        sensorMgr.unregisterListener(this);
+        super.onStop();
     }
 
     @Override
