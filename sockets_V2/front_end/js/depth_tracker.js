@@ -3,28 +3,6 @@ var videoCamera = new tracking.VideoCamera().hide(),
     tracker = null,
     manager = null;
 
-/** MusicManager Part **/
-function MusicManager() {
-
-}
-
-MusicManager.prototype = {
-
-    nextSong: function() {
-
-    },
-
-    previousSong: function() {
-
-    },
-
-    playPause: function() {
-
-    }
-
-};
-
-
 /** Gesture tracker **/
 function DepthTracker(track){
     this.currentDirection = null; // 1 to forward, 0 backward

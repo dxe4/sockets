@@ -1,3 +1,17 @@
 body {
 	background-color: transparent;
 }
+
+#qrcode small{
+	font-size: 12pt;
+}
+
+#qrcode{
+	position: absolute;
+	top: 15px;
+	right: 20px;
+}
+
+h1 {
+	text-align: center;
+}

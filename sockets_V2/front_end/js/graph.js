@@ -278,6 +278,9 @@ graph.addNode("A");
 graph.addNode("B");
 graph.addLink("A", "B");
 
-$.get('/data.json', function(data){
-    console.log(data)
-})
+$.post('http://54.76.152.118:80/get_related', {
+        artist: 'Bob Marley'
+    },
+    function(data){
+        console.log(data)
+});
