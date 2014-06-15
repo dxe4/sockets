@@ -25,8 +25,8 @@ function makeGraph(graph){
 		
 	var force = d3.layout.force()
 		.gravity(.05)
-		.charge(-200)
-		.linkDistance( 60 )
+		.charge(-10)
+		.linkDistance( 30 )
 		.size([w, h]);
 	
 	var svg = d3.select(".text").append("svg")
@@ -79,6 +79,11 @@ function makeGraph(graph){
 					
 				node.append("title")
 					.text(function(d) { return d.URI } );
+
+				node..append("svg:circle")
+				   .attr("r", 4)
+				   .attr("cx", function(d) { return d.x })
+				   .attr("cy", function(d) { return d.y });
 
 			force
 				.nodes(json.nodes)

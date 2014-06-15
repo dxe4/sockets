@@ -15,3 +15,8 @@ body {
 h1 {
 	text-align: center;
 }
+
+.link {
+    stroke: #2E2E2E;
+    stroke-width: 2px;
+}

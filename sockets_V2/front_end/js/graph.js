@@ -115,7 +115,7 @@ function myGraph(el) {
             if ((links[i]['source'] === n) || (links[i]['target'] == n)) links.splice(i, 1);
             else i++;
         }
-        var index = findNodeIndex(id);
+        var index = this.findNodeIndex(id);
         if (index !== undefined) {
             nodes.splice(index, 1);
             update();
@@ -141,7 +141,7 @@ function myGraph(el) {
 
     };
 
-    var findNodeIndex = function (id) {
+    this.findNodeIndex = function (id) {
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].id === id) {
                 return i;
@@ -173,11 +173,7 @@ function myGraph(el) {
         .attr('height', h)
         .attr('fill', 'rgba(1,1,1,0)');
 
-    var force = d3.layout.force()
-        .gravity(.05)
-        .charge(-500)
-        .linkDistance( 400 )
-        .size([w, h]);
+    var force = d3.layout.force();
     
     var svg = d3.select(".text").append("svg")
         .attr("width", w)
@@ -185,7 +181,6 @@ function myGraph(el) {
 
     var nodes = force.nodes(),
         links = force.links();
-
 
     var update = function () {
 
@@ -196,17 +191,17 @@ function myGraph(el) {
 
         link.enter()
            .insert("line")
-           .attr("stroke-opacity", function (d) {
+           .style("stroke-opacity", function (d) {
                return d.score;
            })
-           .attr("stroke-width", function (d) {
-               return d.score * 5;
+           .style("stroke-width", function (d) {
+               return d.score * 10;
            })
            .attr("class", "link")
            .on("mouseover", function () {
                d3.select(this)
-                   .attr("stroke-opacity", "1.0")
-                   .attr("stroke-width", 5)
+                   .style("stroke-opacity", "1.0")
+                   .style("stroke-width", 5)
                ;
            })
 
@@ -228,24 +223,23 @@ function myGraph(el) {
             });
 
 
-        var nodeEnter = node.enter().append("g")
-                .attr("class", "node")
-                /*.append("svg:circle")
-                .attr("r", 50)
-                .attr("x", 50)
-                .attr("y", 50)*/
-                .attr("width", 100)
-                .attr("height", 100)
-                .style("stroke", 'black')
-                /*.style("stroke-width", "15")*/
-                .call(force.drag);
+        var nodeEnter = node.enter()
+            .append("g")
+            .attr("class", "node")
+            .attr("width", 50)
+            .attr("height", 50)
+            .call(force.drag);
 
         nodeEnter
             .append("text")
-            .style('font-size', 35)
+            .style('font-size', 13)
+            .style('color', 'white')
+            .style('fill', 'white')
+            .style('z-index', 500)
+            .style('stroke-width', function(d){ return d.score})
             .attr("class", "nodetext")
-            .attr("dx", 12)
-            .attr("dy", 12)
+            .attr("dx", -8)
+            .attr("dy", -8)
             .text(function (d) {
                 return d.name;
             });
@@ -255,35 +249,53 @@ function myGraph(el) {
             .attr("xlink:href", function (d) {
                 return d.image
             })
+            .attr("width", 50)
+            .attr("height", 50)
+            .on("mouseover", function () {
+               d3.select(this)
+                   .attr("width", 80)
+                   .attr("height", 80)
+               ;
+            })
 
-            .attr("width", 100)
-            .attr("height", 100);
+           .on("mouseout", function () {
+               d3.select(this)
+                .attr("width", 50)
+                .attr("height", 50)
+            });
 
 
 
         node.exit().remove();
 
         force.on("tick", function () {
-            link.attr("x1", function (d) {
-                return d.source.x;
-            })
-                .attr("y1", function (d) {
-                    return d.source.y;
-                })
-                .attr("x2", function (d) {
-                    return d.target.x;
-                })
-                .attr("y2", function (d) {
-                    return d.target.y;
-                });
 
             node.attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
+
+            link.attr("x1", function (d) {
+                return d.source.x;
+            })
+            .attr("y1", function (d) {
+                return d.source.y;
+            })
+            .attr("x2", function (d) {
+                return d.target.x;
+            })
+            .attr("y2", function (d) {
+                return d.target.y;
+            });
         });
 
         // Restart the force layout.
-        force.start();
+        force
+                .gravity(.01)
+                .charge(-80000)
+                .friction(0)
+                .linkDistance( function(d) { return 70/d.score } )
+                .size([w, h])
+                .start();
     };
 
     this.zoom = function (direction) {
@@ -319,7 +331,7 @@ graph = new myGraph("#holder");
 function filterJSONandAddToGraph(JSONResponse) {
 //    console.log(typeof(JSONResponse));
     JSONResponse = $.parseJSON(JSONResponse);
-//    console.log(JSONResponse);
+   console.log(JSONResponse);
     var mbid = JSONResponse[0].id;
     graph.addNode(JSONResponse[0]);
 
@@ -327,17 +339,27 @@ function filterJSONandAddToGraph(JSONResponse) {
 
 //        console.log(JSONResponse[1][i]);
         JSONResponse[1][i][1].id = JSONResponse[1][i][1].name;
+        JSONResponse[1][i][3].id = JSONResponse[1][i][3].name;
         graph.addNode(JSONResponse[1][i][1]);
 //        console.log(JSONResponse[1][i]);
-        graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);
-        graph.addLink(JSONResponse[0].id, JSONResponse[1][i-1][1].id, JSONResponse[1][i][0]);
+        if(i < 10){
+            graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);    
+        }
+        
+        var index_to_check = graph.findNodeIndex(JSONResponse[1][i][3].id);
+        if(index_to_check > -1 && index_to_check !== undefined){
+            graph.addNode(JSONResponse[1][i][3].id);
+            graph.addLink(JSONResponse[1][i][1].id ,JSONResponse[1][i][3].id, JSONResponse[1][i][2]);
+        }
+
+
     }
 
 }
 
 // You can do this from the console as much as you like...
 
-$.get('http://54.76.152.118:80/get_related_2', {
-        artist: 'Bonobo'
-    }, filterJSONandAddToGraph
+$.get('http://54.76.152.118:1234/get_related_2', {
+        artist: "'Bonobo'",
+    }, filterJSONandAddToGraph 
 );
