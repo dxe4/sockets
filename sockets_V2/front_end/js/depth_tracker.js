@@ -55,11 +55,15 @@ ColorTrackerManager.prototype = {
 
         $("body").css("background-color", instance.COLORS[color]);
 
-        if (graph && this.depthTracker.directionCounter > 1){
-            if (this.currentDirection == 1){
-                //graph.zoom('in');
+        console.log(this.depthTracker);
+
+        if (graph){
+            if (this.depthTracker.currentDirection == 1){
+                console.log("goes upwards");
+                graph.zoom('in');
             } else {
-                //graph.zoom('out');
+                console.log("goes backwards");
+                graph.zoom('out');
             }
         }
 
