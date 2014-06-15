@@ -56,8 +56,6 @@ ColorTrackerManager.prototype = {
 
         }
 
-        console.log("Color " + color + " detected !");
-
         $("body").css("background-color", instance.COLORS[color]);
     },
 
@@ -68,7 +66,6 @@ ColorTrackerManager.prototype = {
             type: 'color',
             color: colorName,
             onFound: function(track) {
-                console.log(track.x);
                 instance.onColorFound.call(instance, colorName, track);
             }
         });
