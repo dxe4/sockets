@@ -133,23 +133,25 @@ function myGraph(el) {
 
     var findNode = function (id) {
         for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id)
+            if (nodes[i].id === id) {
                 return nodes[i]
+            }
         }
 
     };
 
     var findNodeIndex = function (id) {
         for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].id === id)
-                return i
+            if (nodes[i].id === id) {
+                return i;
+            }
         }
 
     };
 
     function redraw() {
         vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-    };
+    }
 
     var zoom = d3.behavior.zoom().on("zoom", redraw);
 
@@ -169,11 +171,11 @@ function myGraph(el) {
     vis.append('svg:rect')
         .attr('width', w)
         .attr('height', h)
-        .attr('fill', 'rgba(1,1,1,0)')
+        .attr('fill', 'rgba(1,1,1,0)');
 
     var force = d3.layout.force()
         .gravity(0.01)
-        .charge(-700)
+        .charge(-500)
         .size([w, h]);
 
     var nodes = force.nodes(),
@@ -225,13 +227,18 @@ function myGraph(el) {
                 return d.id;
             });
 
+
         var nodeEnter = node.enter().append("g")
-            .attr("class", "node")
-            .append("svg:circle")
-            .attr("r", 20)
-            .style("fill", 'magenta')
+            //.attr("class", "node")
+            //.append("svg:circle")
+            //.attr("r", 50)
+            .attr("x", 100)
+            .attr("y", 100)
+            .attr("width", 400)
+            .attr("height", 400)
+            .style("fill", 'white')
             .style("stroke", 'black')
-            .style("stroke-width", "4")
+            .style("stroke-width", "8")
             .call(force.drag);
 
         nodeEnter.append("image")
@@ -244,12 +251,12 @@ function myGraph(el) {
             .attr("width", "16px")
             .attr("height", "16px");
 
-        nodeEnter.append("text")
-            .attr("class", "nodetext")
+        nodeEnter.append('svg:text').append("text")
+//            .attr("class", "nodetext")
             .attr("dx", 12)
             .attr("dy", ".35em")
             .text(function (d) {
-                return d.name
+                return d.name;
             });
 
         node.exit().remove();
@@ -288,8 +295,8 @@ function myGraph(el) {
             var y = ((zoom.translate()[1] - (h / 2)) * .75) + h / 2;
         }
         this.scale = scale;
-        zoom.scale(scale).translate([x, y])
-        vis.transition().duration(750).attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
+        zoom.scale(scale).translate([x, y]);
+        vis.transition().duration(5).attr("transform", "translate(" + x + ',' + y + ")" + " scale(" + scale + ")");
     };
     this.translate = function (x, y) {
         var scale = zoom.scale();
@@ -308,20 +315,20 @@ graph = new myGraph("#holder");
 // You can do this from the console as much as you like...
 
 function filterJSONandAddToGraph(JSONResponse) {
-    console.log(typeof(JSONResponse));
+//    console.log(typeof(JSONResponse));
     JSONResponse = $.parseJSON(JSONResponse);
-    console.log(JSONResponse);
+//    console.log(JSONResponse);
     var mbid = JSONResponse[0].id;
-    graph.addNode(JSONResponse[0])
+    graph.addNode(JSONResponse[0]);
 
     store.push(JSONResponse[0]);
     for (var i = 1; i < JSONResponse[1].length; i++) {
 
-        console.log(JSONResponse[1][i]);
+//        console.log(JSONResponse[1][i]);
         store.push(JSONResponse[1][i][1]);
         JSONResponse[1][i][1].id = JSONResponse[1][i][1].name;
         graph.addNode(JSONResponse[1][i][1]);
-        console.log(JSONResponse[1][i]);
+//        console.log(JSONResponse[1][i]);
         graph.addLink(JSONResponse[0].id, JSONResponse[1][i][1].id, JSONResponse[1][i][0]);
     }
 
