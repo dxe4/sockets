@@ -18,7 +18,7 @@ window.playerView = (function (ko, $, SC) {
 
 
 	PlayerView.prototype = {
-		playToggle: function(){
+		playpause: function(){
 			var sound = this.sound(),
 				playing = this.playing(),
 				self = this;
@@ -43,6 +43,12 @@ window.playerView = (function (ko, $, SC) {
 		},
 		loadTrack: function(){
 
+		},
+		skip: function(){
+			console.log('skip');
+		},
+		back: function(){
+			console.log('back');
 		}
 	}
 
